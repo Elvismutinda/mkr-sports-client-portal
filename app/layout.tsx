@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../styles/globals.css";
+import AppLayoutWrapper from "./layoutWrapper";
+import { Toaster } from "sonner";
 
-const schibstedGrotesk = Schibsted_Grotesk({
-  variable: "--font-schibsted-grotesk",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const martianMono = Martian_Mono({
-  variable: "--font-martian-mono",
-  subsets: ["latin"],
+  weight: ["400", "700", "800"],
 });
 
 export const metadata: Metadata = {
   title: "MKR Sports",
-  description: "",
+  description: "Find and join local sports matches with ease using MKR Sports. Sign up now to start playing!",
 };
 
 export default function RootLayout({
@@ -25,9 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
+        className={`${inter.className} min-h-screen antialiased`}
       >
-        {children}
+        <AppLayoutWrapper>
+          {children}
+          <Toaster richColors theme="dark" />
+        </AppLayoutWrapper>
       </body>
     </html>
   );

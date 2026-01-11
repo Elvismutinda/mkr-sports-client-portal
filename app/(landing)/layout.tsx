@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import SiteFooter from "@/components/SiteFooter";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +9,7 @@ export default function LandingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-mkr-navy text-slate-100 pb-20">
+    <div className="min-h-screen bg-mkr-navy text-slate-100">
       <header className="fixed top-0 left-0 w-full bg-mkr-navy/90 backdrop-blur-md border-b border-white/5 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -34,8 +33,6 @@ export default function LandingLayout({
       </header>
 
       <main>{children}</main>
-
-      <SiteFooter />
     </div>
   );
 }

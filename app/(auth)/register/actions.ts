@@ -15,7 +15,7 @@ export const register = async (values: RegisterRequest) => {
     return { error: "Invalid fields!" };
   }
 
-  const { email, password, name } = validatedFields.data;
+  const { email, password, name, phone, position } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Check if user already exists
@@ -28,6 +28,8 @@ export const register = async (values: RegisterRequest) => {
   await db.insert(user).values({
     name,
     email,
+    phone: `+254${phone}`,
+    position,
     password: hashedPassword,
   });
 

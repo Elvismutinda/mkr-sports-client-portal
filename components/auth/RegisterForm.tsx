@@ -47,10 +47,7 @@ const RegisterForm = () => {
 
   const handleRegister = (values: RegisterRequest) => {
     startTransition(() => {
-      register({
-        ...values,
-        phone: `+254${values.phone}`, // ensure full phone is sent
-      }).then((data) => {
+      register(values).then((data) => {
         if (data?.error) {
           toast.error(data?.error);
         } else {
@@ -80,7 +77,7 @@ const RegisterForm = () => {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="Email"
+                      placeholder="Enter your email"
                       type="email"
                       className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
@@ -103,7 +100,7 @@ const RegisterForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="Name"
+                        placeholder="Enter your name"
                         type="text"
                         className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                       />
@@ -129,7 +126,7 @@ const RegisterForm = () => {
                         <Input
                           {...field}
                           disabled={isPending}
-                          placeholder="712345678"
+                          placeholder="XXXXXXXX"
                           className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700 rounded-l-none"
                           type="tel"
                         />
@@ -151,9 +148,9 @@ const RegisterForm = () => {
                   </FormLabel>
                   <FormControl>
                     <Select
-                      disabled={isPending}
+                      value={field.value}
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      disabled={isPending}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full h-14! bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow outline-none font-bold placeholder-slate-700">
@@ -187,7 +184,7 @@ const RegisterForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="Password"
+                        placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
                         className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                       />
@@ -222,7 +219,7 @@ const RegisterForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="Confirm Password"
+                        placeholder="Confirm your password"
                         type={showConfirmPassword ? "text" : "password"}
                         className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                       />
@@ -258,7 +255,7 @@ const RegisterForm = () => {
               className="w-full mt-6 py-5"
               disabled={isPending}
             >
-              Create My Account
+              Register
               {isPending && <LoaderCircle className="h-4 w-4 animate-spin" />}
             </Button>
           </div>

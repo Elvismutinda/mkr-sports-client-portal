@@ -42,9 +42,9 @@ const VerifyEmailForm = () => {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-mkr-navy flex items-center justify-center p-4 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-mkr-navy flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-mkr-yellow rounded-full blur-[150px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-80 bg-mkr-yellow rounded-full blur-[150px]"></div>
       </div>
 
       <div className="w-100 bg-mkr-dark/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.7)] p-10 flex flex-col items-center justify-center text-center relative z-10 animate-fade-in">
@@ -52,7 +52,7 @@ const VerifyEmailForm = () => {
           <h1 className="text-2xl font-black text-white italic uppercase tracking-tighter">
             Account Verification
           </h1>
-          <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] mt-1">
+          <p className="text-slate-500 text-[12px] font-black uppercase tracking-[0.3em] mt-2">
             {message}
           </p>
         </div>
@@ -123,13 +123,13 @@ const VerifyEmailForm = () => {
               Return to HomePage
             </Button>
           ) : (
-            <div className="text-[10px] text-slate-700 font-black uppercase tracking-widest py-4">
+            <div className="text-[12px] text-slate-700 font-black uppercase tracking-widest py-4">
               Synchronizing with Secure Node...
             </div>
           )}
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-2 pt-6 border-t border-white/5 opacity-50 w-full">
+        <div className="mt-10 flex items-center justify-center gap-1 pt-6 border-t border-white/5 opacity-50 w-full">
           <span className="text-xs font-black text-white italic">MKR</span>
           <svg
             className="w-3 h-3 text-mkr-yellow"
@@ -139,7 +139,7 @@ const VerifyEmailForm = () => {
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
           </svg>
           <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-            Protocol 3.1
+            Sports
           </span>
         </div>
       </div>

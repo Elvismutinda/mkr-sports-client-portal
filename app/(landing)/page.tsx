@@ -1,9 +1,19 @@
+import SiteFooter from "@/components/SiteFooter";
 import { buttonVariants } from "@/components/ui/button";
-import UpcomingGames from "@/components/UpcomingGames";
+import UpcomingGamesCard from "@/components/UpcomingGamesCard";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export default function IndexPage() {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+export default async function IndexPage() {
+  const response = await fetch(`${BASE_URL}/api/matches`, {
+    cache: "no-store",
+  });
+
+  const matches = await response.json();
+
   return (
     <>
       <section className="pt-40 pb-24 px-4 text-center relative overflow-hidden">
@@ -40,7 +50,9 @@ export default function IndexPage() {
         </div>
       </section>
 
-      <UpcomingGames />
+      <UpcomingGamesCard matches={matches} />
+
+      <SiteFooter />
     </>
   );
 }

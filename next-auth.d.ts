@@ -3,6 +3,7 @@ import { DefaultSession } from "next-auth";
 export type ExtendedUser = DefaultSession["user"] & {
   role: "admin" | "user";
   phone: string;
+  position: "Goalkeeper" | "Defender" | "Midfielder" | "Forward";
 //   paystackSubscriptionStart: Date;
 //   paystackSubscriptionEnd: Date;
 };

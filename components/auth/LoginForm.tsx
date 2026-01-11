@@ -59,7 +59,7 @@ const LoginForm = () => {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="Email"
+                      placeholder="Enter your email"
                       type="email"
                       className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
@@ -80,7 +80,7 @@ const LoginForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="Password"
+                        placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
                         className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                       />

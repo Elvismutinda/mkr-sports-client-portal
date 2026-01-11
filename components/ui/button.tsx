@@ -16,6 +16,8 @@ const buttonVariants = cva(
         danger: "bg-red-600 hover:bg-red-700 text-white",
         ghost:
           "bg-transparent hover:bg-mkr-slate text-slate-300 hover:text-white",
+        destructive:
+          "bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-600/10",
       },
       size: {
         sm: "px-3 py-1.5 text-xs",

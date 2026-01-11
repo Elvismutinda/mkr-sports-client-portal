@@ -3,7 +3,7 @@ import { content } from "@/config/other";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-const TermsPage = () => {
+const RefundPage = () => {
   return (
     <div className="min-h-screen bg-mkr-navy py-16 px-6 text-slate-100">
       <div className="max-w-3xl mx-auto">
@@ -32,18 +32,18 @@ const TermsPage = () => {
 
         <header className="mb-16 border-b border-white/10 pb-10">
           <h1 className="text-5xl font-black italic tracking-tighter uppercase mb-4 text-white">
-            {content.terms.title}
+            {content.refund.title}
           </h1>
           <div className="flex items-center gap-4">
             <div className="w-12 h-0.5 bg-mkr-yellow"></div>
             <p className="text-mkr-yellow text-[10px] font-black uppercase tracking-[0.3em]">
-              REVISED: {content.terms.lastUpdated}
+              REVISED: {content.refund.lastUpdated}
             </p>
           </div>
         </header>
 
         <div className="space-y-16">
-          {content.terms.sections.map((section, idx) => (
+          {content.refund.sections.map((section, idx) => (
             <section
               key={idx}
               className="group animate-fade-in"
@@ -66,7 +66,7 @@ const TermsPage = () => {
             </span>
           </div>
           <p className="text-[9px] font-black uppercase tracking-widest">
-            &copy; 2025 MKR Secure Systems.
+            &copy; 2026 MKR Sports.
           </p>
         </footer>
       </div>
@@ -74,4 +74,4 @@ const TermsPage = () => {
   );
 };
 
-export default TermsPage;
+export default RefundPage;

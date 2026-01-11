@@ -5,14 +5,14 @@ import Link from "next/link";
 
 const PrivacyPage = () => {
   return (
-    <div className="min-h-screen bg-mkr-navy py-16 px-6 font-sans text-slate-100">
+    <div className="min-h-screen bg-mkr-navy py-16 px-6 text-slate-100">
       <div className="max-w-3xl mx-auto">
-        <div className="flex justify-between items-start mb-12">
+        <div className="flex justify-between items-start">
           <Link
             href="/"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "text-slate-500 hover:text-mkr-yellow transition-colors bg-white/5 p-2 rounded-lg group"
+              "mb-8 p-2 tracking-normal! opacity-60 hover:opacity-100"
             )}
           >
             <svg

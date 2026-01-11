@@ -29,16 +29,22 @@ export interface Player {
   aiAnalysis?: string;
 }
 
-export interface Game {
+export interface Match {
   id: string;
-  date: string; // ISO string
+  date: Date;
   location: string;
-  homeTeam: string[]; // Player IDs (assigned)
-  awayTeam: string[]; // Player IDs (assigned)
-  registeredPlayerIds: string[]; // IDs of people who signed up
-  score?: { home: number; away: number };
+  mode: string;
+  price: number;
+  homeTeam: string[];
+  awayTeam: string[];
+  maxPlayers: number;
+  registeredPlayerIds: string[];
+  score?: { home: number; away: number } | null;
   completed: boolean;
-  matchReport?: string;
+  matchReport?: string | null;
+  isPublic: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface MediaItem {

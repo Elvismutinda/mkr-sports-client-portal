@@ -26,7 +26,7 @@ const LoginPage = () => {
             fill="none"
             stroke="currentColor"
             strokeWidth="3"
-            className="group-hover:-translate-x-1 transition-transform"
+            className="group-hover:-translate-x-0.5 transition-transform"
           >
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
@@ -34,18 +34,18 @@ const LoginPage = () => {
       </div>
 
       <div className="mb-8">
-        <div className="inline-flex items-center gap-2 mb-6">
+        <div className="inline-flex items-center mb-6">
           <span className="text-2xl font-black text-white italic leading-none">
             MKR
           </span>
           <svg
-            className="w-6 h-6 mkr-bolt animate-bolt-flash"
+            className="w-6 h-6 mkr-bolt animate-bolt-flash mx-0.5"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
           </svg>
-          <span className="text-sm font-bold text-mkr-yellow uppercase tracking-[0.2em]">
+          <span className="text-sm font-bold text-mkr-yellow uppercase tracking-[0.2em] ml-1">
             Sports
           </span>
         </div>

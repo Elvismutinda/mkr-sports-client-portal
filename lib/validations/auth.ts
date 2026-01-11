@@ -15,7 +15,7 @@ export const RegisterSchema = z
       .email("Invalid email address"),
     phone: z
       .string()
-      .regex(/^\d{9}$/, "Phone must be 9 digits (e.g. 712345678)"),
+      .regex(/^\d{9}$/, "Phone number must be 9 digits (e.g. 712345678)"),
     position: z.enum(
       Object.values(Position) as [Position, ...Position[]],
       {
