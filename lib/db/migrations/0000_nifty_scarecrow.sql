@@ -1,5 +1,5 @@
 CREATE TYPE "public"."player_positions" AS ENUM('Goalkeeper', 'Defender', 'Midfielder', 'Forward');--> statement-breakpoint
-CREATE TYPE "public"."user_roles" AS ENUM('admin', 'user');--> statement-breakpoint
+CREATE TYPE "public"."user_roles" AS ENUM('player', 'agent');--> statement-breakpoint
 CREATE TABLE "matches" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"date" timestamp with time zone NOT NULL,
@@ -48,7 +48,9 @@ CREATE TABLE "users" (
 	"phone" varchar(15),
 	"position" "player_positions" NOT NULL,
 	"avatarUrl" varchar(256),
-	"role" "user_roles" DEFAULT 'user' NOT NULL,
+	"role" "user_roles" DEFAULT 'player' NOT NULL,
+	"stats" jsonb,
+	"attributes" jsonb,
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
 	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")

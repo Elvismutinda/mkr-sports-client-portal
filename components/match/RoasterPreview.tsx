@@ -17,10 +17,10 @@ const RoasterPreview = ({ players, maxPlayers }: Props) => {
           <div key={player.id} className="relative group/player">
             {/* Custom Tactical Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-mkr-navy border border-mkr-yellow rounded-lg opacity-0 scale-95 group-hover/player:opacity-100 group-hover/player:scale-100 transition-all duration-200 pointer-events-none z-60 whitespace-nowrap shadow-2xl">
-              <div className="text-[9px] font-black text-mkr-yellow uppercase tracking-widest italic">
+              <div className="text-[9px] font-black text-mkr-yellow uppercase tracking-widest">
                 Name
               </div>
-              <div className="text-[11px] font-black text-white uppercase italic tracking-tight">
+              <div className="text-[11px] font-black text-white uppercase tracking-tight">
                 {player.name}
               </div>
               {/* Arrow */}

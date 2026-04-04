@@ -17,7 +17,7 @@ export default async function LandingLayout({
         <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="flex items-center">
-              <span className="text-2xl font-black text-white italic tracking-tighter">
+              <span className="text-2xl font-black text-white tracking-tighter">
                 MKR
               </span>
               <svg
@@ -42,7 +42,7 @@ export default async function LandingLayout({
           ) : (
             <Link
               href="/login"
-              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+              className={cn(buttonVariants({ variant: "primary", size: "sm" }))}
             >
               Login
             </Link>

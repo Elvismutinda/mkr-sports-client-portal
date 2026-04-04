@@ -1,4 +1,4 @@
-import { Position } from "@/types/types";
+import { POSITIONS } from "@/types/types";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -16,12 +16,9 @@ export const RegisterSchema = z
     phone: z
       .string()
       .regex(/^\d{9}$/, "Phone number must be 9 digits (e.g. 712345678)"),
-    position: z.enum(
-      Object.values(Position) as [Position, ...Position[]],
-      {
-        message: "Position is required",
-      }
-    ),
+    position: z.enum(POSITIONS, {
+      message: "Position is required",
+    }),
     password: z
       .string()
       .min(1, "Password is required")

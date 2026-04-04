@@ -1,5 +1,5 @@
 {
-  "id": "fe2bd670-bec9-4741-a954-d63014e879fd",
+  "id": "2f361c9b-f6b2-4174-ab05-0235b94d7d3b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -378,7 +378,19 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'user'"
+          "default": "'player'"
+        },
+        "stats": {
+          "name": "stats",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attributes": {
+          "name": "attributes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -495,8 +507,8 @@
       "name": "user_roles",
       "schema": "public",
       "values": [
-        "admin",
-        "user"
+        "player",
+        "agent"
       ]
     }
   },

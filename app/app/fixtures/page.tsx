@@ -1,8 +1,11 @@
-import React from 'react'
+import { CustomHeader } from '@/components/CustomHeader'
 
 function page() {
   return (
-    <div>page</div>
+    <CustomHeader
+      title="Fixtures"
+      subtitle="Upcoming matches and events"
+    />
   )
 }
 

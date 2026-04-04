@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-
 import { db } from "./lib/db/db";
 import authConfig from "./auth.config";
 import { getUserById } from "@/data/user";
@@ -32,12 +31,10 @@ export const {
       }
 
       if (session.user) {
-        session.user.role = token.role as "admin" | "user";
+        session.user.role = token.role as "player" | "agent";
         session.user.phone = token.phone as string;
-        // session.user.paystackSubscriptionStart =
-        //   token.paystackSubscriptionStart as Date;
-        // session.user.paystackSubscriptionEnd =
-        //   token.paystackSubscriptionEnd as Date;
+        session.user.avatarUrl = token.avatarUrl as string;
+        session.user.position = token.position as "Goalkeeper" | "Defender" | "Midfielder" | "Forward";
       }
 
       // console.log(session);
@@ -55,8 +52,8 @@ export const {
 
       token.role = user.role;
       token.phone = user.phone;
-    //   token.paystackSubscriptionStart = user.paystackSubscriptionStart;
-    //   token.paystackSubscriptionEnd = user.paystackSubscriptionEnd;
+      token.avatarUrl = user.avatarUrl; 
+      token.position = user.position;
 
       return token;
     },

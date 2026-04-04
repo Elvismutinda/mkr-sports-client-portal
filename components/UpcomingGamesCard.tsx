@@ -11,7 +11,7 @@ const UpcomingGamesCard = ({ matches }: Props) => {
   return (
     <section id="matches" className="py-24 px-4 max-w-5xl mx-auto">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-black text-white mb-4 uppercase italic">
+        <h2 className="text-4xl font-black text-white mb-4 uppercase">
           Live Fixtures
         </h2>
         <div className="w-20 h-1 bg-mkr-yellow mx-auto"></div>
@@ -93,7 +93,7 @@ const UpcomingGamesCard = ({ matches }: Props) => {
           ))
         ) : (
           <div className="col-span-full py-24 text-center bg-white/5 rounded-3xl border-2 border-dashed border-white/10">
-            <p className="text-slate-500 font-bold text-xl uppercase italic tracking-widest">
+            <p className="text-slate-500 font-bold text-xl uppercase tracking-widest">
               No Active Fixtures Found
             </p>
           </div>

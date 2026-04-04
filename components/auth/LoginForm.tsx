@@ -61,7 +61,7 @@ const LoginForm = () => {
                       disabled={isPending}
                       placeholder="Enter your email"
                       type="email"
-                      className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                      className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
                   </FormControl>
                   <FormMessage />
@@ -82,7 +82,7 @@ const LoginForm = () => {
                         disabled={isPending}
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                        className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                       />
                       <button
                         type="button"
@@ -109,7 +109,7 @@ const LoginForm = () => {
 
           <div>
             <Button
-              size="lg"
+              size="md"
               type="submit"
               className="w-full mt-6 py-5"
               disabled={isPending}

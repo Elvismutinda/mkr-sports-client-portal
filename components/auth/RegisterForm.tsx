@@ -26,11 +26,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Position } from "@/types/types";
+import { POSITIONS } from "@/types/types";
 
 // sessionStorage key
 const FORM_STORAGE_KEY = "mkr_register_step1";
-type Step1Fields = Pick<RegisterRequest, "name" | "email" | "phone" | "position">;
+type Step1Fields = Pick<
+  RegisterRequest,
+  "name" | "email" | "phone" | "position"
+>;
 
 const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -102,7 +105,9 @@ const RegisterForm = () => {
         } else {
           toast.success(data?.success);
           // Clear persisted data on success
-          try { sessionStorage.removeItem(FORM_STORAGE_KEY); } catch {}
+          try {
+            sessionStorage.removeItem(FORM_STORAGE_KEY);
+          } catch {}
         }
       });
     });
@@ -111,7 +116,7 @@ const RegisterForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleRegister)} className="space-y-6">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3 mb-4">
           {[1, 2].map((s) => (
             <div key={s} className="flex items-center gap-3">
               <div
@@ -119,8 +124,8 @@ const RegisterForm = () => {
                   step === s
                     ? "bg-mkr-yellow text-black scale-110"
                     : step > s
-                    ? "bg-mkr-yellow/30 text-mkr-yellow"
-                    : "bg-white/10 text-slate-500"
+                      ? "bg-mkr-yellow/30 text-mkr-yellow"
+                      : "bg-white/10 text-slate-500"
                 }`}
               >
                 {s}
@@ -158,7 +163,7 @@ const RegisterForm = () => {
                     disabled={isPending}
                     placeholder="Enter your email"
                     type="email"
-                    className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                    className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                   />
                 </FormControl>
                 <FormMessage />
@@ -181,7 +186,7 @@ const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="Enter your name"
                       type="text"
-                      className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                      className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
                   </FormControl>
                   <FormMessage />
@@ -199,14 +204,14 @@ const RegisterForm = () => {
                   </FormLabel>
                   <FormControl>
                     <div className="flex">
-                      <span className="h-14 flex items-center px-4 rounded-l-2xl bg-mkr-dark/70 border border-white/10 text-slate-400 font-bold">
+                      <span className="h-12 flex items-center px-4 rounded-l-2xl bg-mkr-dark/70 border border-white/10 text-slate-400 font-bold">
                         +254
                       </span>
                       <Input
                         {...field}
                         disabled={isPending}
                         placeholder="XXXXXXXXX"
-                        className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700 rounded-l-none"
+                        className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700 rounded-l-none"
                         type="tel"
                       />
                     </div>
@@ -232,12 +237,12 @@ const RegisterForm = () => {
                     disabled={isPending}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full h-14! bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow outline-none font-bold placeholder-slate-700">
+                      <SelectTrigger className="w-full h-12! bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow outline-none font-bold placeholder-slate-700">
                         <SelectValue placeholder="Select position" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.values(Position).map((position) => (
+                      {POSITIONS.map((position) => (
                         <SelectItem key={position} value={position}>
                           {position}
                         </SelectItem>
@@ -252,7 +257,7 @@ const RegisterForm = () => {
 
           <Button
             type="button"
-            size="lg"
+            size="md"
             onClick={handleNextStep}
             className="w-full mt-6 py-5"
           >
@@ -281,7 +286,7 @@ const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
-                      className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                      className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
                     <button
                       type="button"
@@ -312,14 +317,20 @@ const RegisterForm = () => {
                       disabled={isPending}
                       placeholder="Confirm your password"
                       type={showConfirmPassword ? "text" : "password"}
-                      className="w-full h-14 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
+                      className="w-full h-12 bg-mkr-dark/50 border border-white/10 rounded-2xl p-4 text-white focus:ring-2 focus:ring-mkr-yellow! outline-none font-bold placeholder-slate-700"
                     />
                     <button
                       type="button"
                       className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
-                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showConfirmPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
                     </button>
                   </div>
                 </FormControl>
@@ -331,7 +342,7 @@ const RegisterForm = () => {
           <div className="flex gap-3 mt-6">
             <Button
               type="button"
-              size="lg"
+              size="md"
               variant="secondary"
               onClick={() => setStep(1)}
               disabled={isPending}
@@ -342,24 +353,32 @@ const RegisterForm = () => {
             </Button>
 
             <Button
-              size="lg"
+              size="md"
               type="submit"
               className="flex-1 py-5"
               disabled={isPending}
             >
               Register
-              {isPending && <LoaderCircle className="h-4 w-4 ml-1 animate-spin" />}
+              {isPending && (
+                <LoaderCircle className="h-4 w-4 ml-1 animate-spin" />
+              )}
             </Button>
           </div>
         </div>
 
         <p className="text-[10px] text-slate-500 text-center px-4 leading-relaxed font-black uppercase tracking-widest opacity-80">
           By submitting, I agree to the{" "}
-          <Link href="/terms-and-conditions" className="text-mkr-yellow hover:underline">
+          <Link
+            href="/terms-and-conditions"
+            className="text-mkr-yellow hover:underline"
+          >
             Terms and Conditions
           </Link>{" "}
           and{" "}
-          <Link href="/privacy-policy" className="text-mkr-yellow hover:underline">
+          <Link
+            href="/privacy-policy"
+            className="text-mkr-yellow hover:underline"
+          >
             Privacy Policy
           </Link>
           .

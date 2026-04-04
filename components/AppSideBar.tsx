@@ -10,6 +10,7 @@ import {
   CalendarCheck,
   ChevronDown,
   ChevronRight,
+  Settings,
 } from "lucide-react";
 import { MKRSportsLogo } from "./MKRSportsLogo";
 import { cn } from "@/lib/utils";
@@ -70,6 +71,12 @@ export default function AppSideBar({
       icon: <CalendarCheck className="h-4 w-4 shrink-0" />,
       label: "Events",
       href: "/app/events",
+    },
+    {
+      key: "/app/settings",
+      icon: <Settings className="h-4 w-4 shrink-0" />,
+      label: "Settings",
+      href: "/app/settings",
     },
   ];
 

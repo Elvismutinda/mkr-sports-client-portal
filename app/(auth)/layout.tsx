@@ -33,7 +33,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             </svg>
           </div>
 
-          <h2 className="text-6xl font-black text-white italic uppercase tracking-tighter leading-tight mb-6">
+          <h2 className="text-6xl font-black text-white uppercase tracking-tighter leading-tight mb-6">
             Unleash Your <br />
             <span className="text-mkr-yellow">Power</span>
           </h2>

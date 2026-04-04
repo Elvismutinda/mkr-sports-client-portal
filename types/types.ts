@@ -1,14 +1,16 @@
-export enum Position {
-  GK = 'Goalkeeper',
-  DEF = 'Defender',
-  MID = 'Midfielder',
-  FWD = 'Forward'
-}
+export const POSITIONS = [
+  "Goalkeeper",
+  "Defender",
+  "Midfielder",
+  "Forward",
+] as const;
+export type Position = (typeof POSITIONS)[number];
 
 export interface Player {
   id: string;
   name: string;
   email: string;
+  phone: string;
   position: Position;
   avatarUrl: string;
   stats: {
@@ -25,6 +27,8 @@ export interface Player {
     dribbling: number;
     defense: number;
     physical: number;
+    stamina: number;
+    workRate: number;
   };
   aiAnalysis?: string;
 }
@@ -50,10 +54,31 @@ export interface Match {
 export interface MediaItem {
   id: string;
   uploaderId: string;
-  type: 'image' | 'video';
+  type: "image" | "video";
   url: string; // Base64 or Blob URL
   caption: string;
   timestamp: string;
 }
 
-export type ViewState = 'landing' | 'dashboard' | 'schedule' | 'stats' | 'media' | 'profile';
+export interface Tournament {
+  id: number;
+  name: string;
+  location: string;
+  description: string;
+  prizePool: string;
+  commencement: string;
+  status: TournamentStatus;
+  media?: MediaItem[];
+  participants?: {
+    id: string;
+    name: string;
+    email: string;
+    position: Position;
+    avatarUrl?: string;
+  }[]; // Array of player/agent participants
+}
+
+export type TournamentStatus =
+  | "UPCOMING OPERATION"
+  | "ONGOING OPERATION"
+  | "COMPLETED";

@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => (
         <FileQuestion className="h-12 w-12 text-muted-foreground" />
       </div>
 
-      <h1 className="text-8xl font-bold tracking-tight text-foreground">
+      <h1 className="text-7xl font-bold tracking-tight text-foreground">
         404
       </h1>
 

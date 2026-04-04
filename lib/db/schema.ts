@@ -12,7 +12,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const userRoles = ["admin", "user"] as const;
+export const userRoles = ["player", "agent"] as const;
 export type UserRole = (typeof userRoles)[number];
 export const userRoleEnum = pgEnum("user_roles", userRoles);
 
@@ -34,7 +34,24 @@ export const user = pgTable("users", {
   phone: varchar("phone", { length: 15 }),
   position: positionEnum("position").notNull(),
   avatarUrl: varchar("avatarUrl", { length: 256 }),
-  role: userRoleEnum().notNull().default("user"),
+  role: userRoleEnum().notNull().default("player"),
+  stats: jsonb("stats").$type<{
+    matchesPlayed: number;
+    goals: number;
+    assists: number;
+    motm: number;
+    rating: number;
+  }>(),
+  attributes: jsonb("attributes").$type<{
+    pace: number;
+    shooting: number;
+    passing: number;
+    dribbling: number;
+    defense: number;
+    physical: number;
+    stamina: number;
+    workRate: number;
+  }>(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true })
     .notNull()
@@ -90,9 +107,9 @@ export const matchPlayers = pgTable(
   (table) => ({
     uniquePlayerPerMatch: uniqueIndex("unique_match_player").on(
       table.matchId,
-      table.playerId
+      table.playerId,
     ),
-  })
+  }),
 );
 
 export const payments = pgTable("payments", {
@@ -127,9 +144,9 @@ export const verificationToken = pgTable(
   (table) => ({
     emailTokenUnique: uniqueIndex("emailTokenUnique").on(
       table.email,
-      table.token
+      table.token,
     ),
-  })
+  }),
 );
 
 // export const userRelations = relations(UserTable, ({ many }) => ({

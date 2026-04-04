@@ -17,7 +17,7 @@ const VerifyEmailForm = () => {
   );
 
   const onVerified = useCallback(() => {
-    window.location.href = "/dashboard";
+    window.location.href = "/login";
   }, []);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const VerifyEmailForm = () => {
 
       <div className="w-100 bg-mkr-dark/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.7)] p-10 flex flex-col items-center justify-center text-center relative z-10 animate-fade-in">
         <div className="mb-8">
-          <h1 className="text-2xl font-black text-white italic uppercase tracking-tighter">
+          <h1 className="text-2xl font-black text-white uppercase tracking-tighter">
             Account Verification
           </h1>
           <p className="text-slate-500 text-[12px] font-black uppercase tracking-[0.3em] mt-2">
@@ -111,7 +111,7 @@ const VerifyEmailForm = () => {
         <div className="w-full">
           {status === "success" ? (
             <Button size="lg" className="w-full" onClick={onVerified}>
-              Initialize Dashboard
+              Login to Dashboard
             </Button>
           ) : status === "error" ? (
             <Button
@@ -130,7 +130,7 @@ const VerifyEmailForm = () => {
         </div>
 
         <div className="mt-10 flex items-center justify-center gap-1 pt-6 border-t border-white/5 opacity-50 w-full">
-          <span className="text-xs font-black text-white italic">MKR</span>
+          <span className="text-xs font-black text-white">MKR</span>
           <svg
             className="w-3 h-3 text-mkr-yellow"
             viewBox="0 0 24 24"

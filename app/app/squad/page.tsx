@@ -1,9 +1,33 @@
-import React from 'react'
+import { CustomHeader } from "@/components/CustomHeader";
+import { EmptyRoster } from "@/components/roster/EmptyRoster";
+import { PlayerGrid } from "@/components/roster/PlayerGrid";
+import { Player } from "@/types/types";
 
-function page() {
-  return (
-    <div>page</div>
-  )
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+// Replace with your real DB/API call
+async function getPlayers(): Promise<Player[]> {
+  const res = await fetch(`${BASE_URL}/api/players`, { cache: "no-store" });
+  if (!res.ok) return [];
+  return res.json();
 }
 
-export default page
+export default async function SquadPage() {
+  const players = await getPlayers();
+
+  return (
+    <div className="px-6 py-12 md:px-16">
+      <CustomHeader
+        title="Personnel Roster"
+        subtitle="Your team, roster, and player profiles"
+        activeCount={players.length}
+      />
+
+      {players.length === 0 ? (
+        <EmptyRoster />
+      ) : (
+        <PlayerGrid players={players} />
+      )}
+    </div>
+  );
+}

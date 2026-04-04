@@ -84,11 +84,11 @@ export default async function MatchDetailsPage({ params }: PageProps) {
         </div>
 
         <header className="mb-10 max-w-3xl">
-          <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase mb-4 leading-none text-white">
+          <h1 className="text-5xl md:text-7xl font-black  tracking-tighter uppercase mb-4 leading-none text-white">
             Match Day: {match.location.split(" ")[0]}{" "}
             <span className="text-mkr-yellow">{gameDate.getFullYear()}</span>
           </h1>
-          <p className="text-lg text-slate-400 font-medium leading-relaxed italic">
+          <p className="text-lg text-slate-400 font-medium leading-relaxed ">
             MKR Sports&apos; premier weekly football fixture.
           </p>
         </header>
@@ -105,7 +105,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
               />
               <div className="absolute inset-0 bg-linear-to-t from-mkr-navy/80 to-transparent"></div>
               <div className="absolute bottom-8 left-8">
-                <div className="px-4 py-2 bg-mkr-yellow text-mkr-navy font-black text-xs uppercase tracking-widest rounded-xl italic shadow-xl">
+                <div className="px-4 py-2 bg-mkr-yellow text-mkr-navy font-black text-xs uppercase tracking-widest rounded-xl  shadow-xl">
                   Status: {match.completed ? "Terminated" : "Active"}
                 </div>
               </div>
@@ -113,7 +113,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
 
             <section className="animate-fade-in">
               <div className="flex items-center gap-4 mb-6">
-                <h2 className="text-2xl font-black italic uppercase tracking-tight text-white">
+                <h2 className="text-2xl font-black  uppercase tracking-tight text-white">
                   Playground Visual
                 </h2>
                 <div className="h-px flex-1 bg-white/5"></div>
@@ -139,7 +139,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 <div className="absolute inset-0 p-8 flex flex-col justify-between text-center">
                   {/* FWD Zone */}
                   <div className="flex justify-around items-center">
-                    {playersByPosition(Position.FWD).map((p) => (
+                    {playersByPosition("Forward").map((p) => (
                       <div key={p.id} className="group relative">
                         <Image
                           src={p.avatarUrl}
@@ -148,20 +148,20 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
                         />
-                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded italic border border-mkr-yellow/30">
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
                       </div>
                     ))}
-                    {playersByPosition(Position.FWD).length === 0 && (
-                      <div className="text-[10px] text-white/20 font-black uppercase italic">
+                    {playersByPosition("Forward").length === 0 && (
+                      <div className="text-[10px] text-white/20 font-black uppercase">
                         No FWD Units
                       </div>
                     )}
                   </div>
                   {/* MID Zone */}
                   <div className="flex justify-around items-center">
-                    {playersByPosition(Position.MID).map((p) => (
+                    {playersByPosition("Midfielder").map((p) => (
                       <div key={p.id} className="group relative">
                         <Image
                           src={p.avatarUrl}
@@ -170,20 +170,20 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
                         />
-                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded italic border border-mkr-yellow/30">
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
                       </div>
                     ))}
-                    {playersByPosition(Position.MID).length === 0 && (
-                      <div className="text-[10px] text-white/20 font-black uppercase italic">
+                    {playersByPosition("Midfielder").length === 0 && (
+                      <div className="text-[10px] text-white/20 font-black uppercase">
                         No MID Units
                       </div>
                     )}
                   </div>
                   {/* DEF Zone */}
                   <div className="flex justify-around items-center">
-                    {playersByPosition(Position.DEF).map((p) => (
+                    {playersByPosition("Defender").map((p) => (
                       <div key={p.id} className="group relative">
                         <Image
                           src={p.avatarUrl}
@@ -192,20 +192,20 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
                         />
-                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded italic border border-mkr-yellow/30">
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
                       </div>
                     ))}
-                    {playersByPosition(Position.DEF).length === 0 && (
-                      <div className="text-[10px] text-white/20 font-black uppercase italic">
+                    {playersByPosition("Defender").length === 0 && (
+                      <div className="text-[10px] text-white/20 font-black uppercase">
                         No DEF Units
                       </div>
                     )}
                   </div>
                   {/* GK Zone */}
                   <div className="flex justify-center">
-                    {playersByPosition(Position.GK).map((p) => (
+                    {playersByPosition("Goalkeeper").map((p) => (
                       <div key={p.id} className="group relative">
                         <Image
                           src={p.avatarUrl}
@@ -214,13 +214,13 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
                         />
-                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded italic border border-mkr-yellow/30">
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
                       </div>
                     ))}
-                    {playersByPosition(Position.GK).length === 0 && (
-                      <div className="text-[10px] text-white/20 font-black uppercase italic">
+                    {playersByPosition("Goalkeeper").length === 0 && (
+                      <div className="text-[10px] text-white/20 font-black uppercase">
                         GK Required
                       </div>
                     )}
@@ -230,7 +230,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
             </section>
 
             <section>
-              <h2 className="text-2xl font-black italic uppercase tracking-tight mb-6 text-white">
+              <h2 className="text-2xl font-black  uppercase tracking-tight mb-6 text-white">
                 Match Details
               </h2>
               <ul className="space-y-4">
@@ -286,7 +286,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
             </section>
 
             <section>
-              <h2 className="text-2xl font-black italic uppercase tracking-tight mb-6 text-white">
+              <h2 className="text-2xl font-black  uppercase tracking-tight mb-6 text-white">
                 Match Day Schedule
               </h2>
               <div className="space-y-4">
@@ -326,10 +326,10 @@ export default async function MatchDetailsPage({ params }: PageProps) {
           <div className="w-full lg:w-95">
             <div className="sticky top-28 bg-mkr-dark border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-8">
               <div className="flex justify-between items-center border-b border-white/5 pb-6">
-                <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">
+                <h3 className="text-xl font-black text-white uppercase  tracking-tighter">
                   Register Now
                 </h3>
-                <span className="text-mkr-yellow font-black text-lg italic">
+                <span className="text-mkr-yellow font-black text-lg ">
                   KSH. {priceKES}
                 </span>
               </div>
@@ -341,7 +341,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                       <div className="text-emerald-400 font-black uppercase text-[10px] tracking-widest mb-2">
                         Registration Confirmed
                       </div>
-                      <p className="text-xs text-slate-400 font-bold italic leading-relaxed">
+                      <p className="text-xs text-slate-400 font-bold  leading-relaxed">
                         You are already registered for this match.
                       </p>
                     </div>
@@ -353,7 +353,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     <div className="text-red-400 font-black uppercase text-[10px]">
                       Match Full
                     </div>
-                    <p className="text-xs text-slate-400 font-bold italic">
+                    <p className="text-xs text-slate-400 font-bold ">
                       No more slots available.
                     </p>
                   </div>
@@ -365,7 +365,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   <div className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">
                     Status: Closed
                   </div>
-                  <p className="text-xs text-slate-400 font-bold italic">
+                  <p className="text-xs text-slate-400 font-bold ">
                     Match played.
                   </p>
                 </div>

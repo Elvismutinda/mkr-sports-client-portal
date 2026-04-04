@@ -31,34 +31,29 @@ export const sendVerificationEmail = async (email: string, token: string) => {
             <tr>
             <td align="center">
 
-                <!-- Card -->
                 <table width="480" cellpadding="0" cellspacing="0" border="0"
                 style="background-color:#0f1623;border-radius:12px;overflow:hidden;max-width:480px;width:100%">
                 <tr>
                     <td style="padding:36px 40px 40px 40px">
 
-                    <!-- Logo -->
                     <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px">
                         <tr>
                         <td>
-                            <span style="font-size:22px;font-weight:900;font-style:italic;color:#ffffff;letter-spacing:-0.5px">MKR</span>
+                            <span style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:-0.5px">MKR</span>
                             <span style="font-size:11px;font-weight:700;color:#ffea00;letter-spacing:0.25em;text-transform:uppercase;margin-left:6px">SPORTS</span>
                         </td>
                         </tr>
                     </table>
 
-                    <!-- Heading -->
-                    <p style="margin:0 0 16px 0;font-size:26px;font-weight:900;font-style:italic;color:#ffffff;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1">
+                    <p style="margin:0 0 16px 0;font-size:26px;font-weight:900;color:#ffffff;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1">
                         ACCOUNT VERIFICATION
                     </p>
 
-                    <!-- Body text -->
-                    <p style="margin:0 0 32px 0;font-size:14px;font-style:italic;color:#8a9ab5;line-height:1.6">
+                    <p style="margin:0 0 32px 0;font-size:14px;color:#8a9ab5;line-height:1.6">
                         Greetings, Player. You have requested registration on the MKR Sports System.
                         Kindly verify your email to access your personalized dashboard.
                     </p>
 
-                    <!-- CTA Button -->
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px">
                         <tr>
                         <td align="center">
@@ -70,24 +65,20 @@ export const sendVerificationEmail = async (email: string, token: string) => {
                         </tr>
                     </table>
 
-                    <!-- Expiry note -->
-                    <p style="margin:0 0 28px 0;font-size:11px;font-weight:700;font-style:italic;color:#ffea00;letter-spacing:0.15em;text-transform:uppercase;text-align:center">
+                    <p style="margin:0 0 28px 0;font-size:11px;font-weight:700;color:#ffea00;letter-spacing:0.15em;text-transform:uppercase;text-align:center">
                         THIS VERIFICATION LINK EXPIRES IN 2 MINUTES
                     </p>
 
-                    <!-- Divider -->
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px">
                         <tr>
                         <td style="border-top:1px solid #1e2d42;font-size:0">&nbsp;</td>
                         </tr>
                     </table>
 
-                    <!-- Direct relay URL label -->
                     <p style="margin:0 0 8px 0;font-size:11px;font-weight:700;color:#4a5f7a;letter-spacing:0.15em;text-transform:uppercase">
-                        DIRECT RELAY URL:
+                        DIRECT URL:
                     </p>
 
-                    <!-- Relay link -->
                     <p style="margin:0;font-size:13px;line-height:1.5;word-break:break-all">
                         <a href="${confirmLink}" style="color:#ffea00;text-decoration:none">${confirmLink}</a>
                     </p>

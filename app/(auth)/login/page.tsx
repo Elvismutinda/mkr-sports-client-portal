@@ -35,7 +35,7 @@ const LoginPage = () => {
 
       <div className="mb-8">
         <div className="inline-flex items-center mb-6">
-          <span className="text-2xl font-black text-white italic leading-none">
+          <span className="text-2xl font-black text-white leading-none">
             MKR
           </span>
           <svg
@@ -49,12 +49,9 @@ const LoginPage = () => {
             Sports
           </span>
         </div>
-        <h1 className="text-4xl font-black text-white uppercase italic tracking-tighter">
+        <h1 className="text-3xl font-black text-white uppercase tracking-tighter">
           Welcome Back
         </h1>
-        {/* <p className="text-slate-500 text-xs font-black uppercase tracking-[0.3em]">
-          Access the ultimate football management platform
-        </p> */}
       </div>
       <LoginForm />
     </>

@@ -24,7 +24,7 @@ export default async function IndexPage() {
               The Future of Sunday League
             </span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-black text-white mb-8 leading-none italic uppercase">
+          <h1 className="text-5xl md:text-8xl font-black text-white mb-8 leading-none uppercase">
             Dominate Your <span className="text-mkr-yellow">Pitch</span>
           </h1>
           <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-medium">

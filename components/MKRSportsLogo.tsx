@@ -13,7 +13,7 @@ export function MKRSportsLogo({ collapsed }: { collapsed: boolean }) {
 
   return (
     <p className="flex items-center">
-      <span className="text-xl font-black text-white italic tracking-tighter">MKR</span>
+      <span className="text-xl font-black text-white tracking-tighter">MKR</span>
       <svg
         className="w-5 h-5 fill-[#ffea00] animate-bolt-flash mx-0.5"
         viewBox="0 0 24 24"

@@ -31,7 +31,7 @@ const PrivacyPage = () => {
         </div>
 
         <header className="mb-16 border-b border-white/10 pb-10">
-          <h1 className="text-5xl font-black italic tracking-tighter uppercase mb-4 text-white">
+          <h1 className="text-5xl font-black tracking-tighter uppercase mb-4 text-white">
             {content.privacy.title}
           </h1>
           <div className="flex items-center gap-4">
@@ -52,7 +52,7 @@ const PrivacyPage = () => {
               <h3 className="text-sm font-black text-white uppercase tracking-[0.2em] mb-4 group-hover:text-mkr-yellow transition-colors">
                 {section.heading}
               </h3>
-              <p className="text-slate-400 leading-relaxed font-bold italic border-l-2 border-white/5 pl-6 group-hover:border-mkr-yellow/30 transition-all">
+              <p className="text-slate-400 leading-relaxed font-bold border-l-2 border-white/5 pl-6 group-hover:border-mkr-yellow/30 transition-all">
                 {section.body}
               </p>
             </section>
@@ -61,7 +61,7 @@ const PrivacyPage = () => {
 
         <footer className="mt-32 pt-10 border-t border-white/5 flex justify-between items-center opacity-40">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black italic">
+            <span className="text-[10px] font-black">
               MKR Sports Group
             </span>
           </div>
