@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
 import { match } from "@/lib/db/schema";
-import { and, gte, lte, eq } from "drizzle-orm";
-
+import { and, eq } from "drizzle-orm";
 
 export async function GET() {
   try {
@@ -30,7 +29,7 @@ export async function GET() {
           eq(match.isPublic, true),
           // gte(match.date, startOfWeek),
           // lte(match.date, endOfWeek)
-        )
+        ),
       )
       .orderBy(match.date);
 
@@ -39,29 +38,22 @@ export async function GET() {
     console.error("[MATCHES_GET]", error);
     return NextResponse.json(
       { error: "Failed to fetch matches" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
-
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const {
-      date,
-      location,
-      homeTeam,
-      awayTeam,
-      maxPlayers,
-      isPublic,
-    } = body;
+    const { date, location, mode, homeTeam, awayTeam, maxPlayers, isPublic } =
+      body;
 
-    if (!date || !location) {
+    if (!date || !location || !mode) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -70,7 +62,7 @@ export async function POST(req: Request) {
       .values({
         date: new Date(date),
         location,
-        
+        mode,
         homeTeam,
         awayTeam,
         maxPlayers,
@@ -83,7 +75,7 @@ export async function POST(req: Request) {
     console.error("[MATCHES_POST]", error);
     return NextResponse.json(
       { error: "Failed to create match" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
