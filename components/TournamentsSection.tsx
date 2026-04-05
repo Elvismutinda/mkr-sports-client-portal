@@ -48,7 +48,7 @@ export default function TournamentsSection() {
             className="relative bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7 hover:border-mkr-yellow/30 transition-all duration-300 overflow-hidden flex flex-col gap-5"
           >
             <div
-              className={`absolute top-0 right-6 px-3 py-1.5 rounded-b-lg ${getStatusStyles(tournament.status)} text-[10px] font-black tracking-[0.18em] uppercase`}
+              className={`absolute top-0 right-0 px-3 py-1.5 rounded-b-lg rounded-br-none ${getStatusStyles(tournament.status)} text-[10px] font-black tracking-[0.18em] uppercase`}
             >
               <div>{tournament.status}</div>
             </div>
