@@ -46,7 +46,12 @@ const RegisterMatchForm = ({ match }: Props) => {
     startTransition(async () => {
       try {
         await startMatchPayment(match.id, `254${values.phone}`);
-        toast.success("Check your phone to complete payment");
+        toast.success(
+          "Complete payment on your phone and once done check your email for confirmation.",
+          {
+            duration: Infinity,
+          },
+        );
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Something went wrong";

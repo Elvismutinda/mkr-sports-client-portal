@@ -9,7 +9,7 @@ import { revalidatePath } from "next/cache";
 
 export async function enlistForMatch(matchId: string) {
   const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  if (!session?.user?.id) throw new Error("You must be logged in to join a match");
 
   const userId = session.user.id;
 
@@ -39,7 +39,7 @@ export async function enlistForMatch(matchId: string) {
 
 export async function leaveMatch(matchId: string) {
   const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  if (!session?.user?.id) throw new Error("You must be logged in to leave a match");
 
   await db
     .delete(matchPlayers)
@@ -55,7 +55,7 @@ export async function leaveMatch(matchId: string) {
 
 export async function startMatchPayment(matchId: string, phone: string) {
   const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  if (!session?.user?.id) throw new Error("You must be logged in to make a payment");
 
   const userId = session.user.id;
 

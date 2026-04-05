@@ -12,6 +12,7 @@ export default function LeaveMatchButton({ matchId }: { matchId: string }) {
       variant="destructive"
       disabled={pending}
       onClick={() => startTransition(() => leaveMatch(matchId))}
+      className="w-full py-5! shadow-[0_0_20px_rgba(255,234,0,0.1)]"
     >
       {pending ? "Leaving..." : "Leave Match"}
     </Button>

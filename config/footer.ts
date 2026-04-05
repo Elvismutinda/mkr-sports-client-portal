@@ -42,7 +42,7 @@ export const footerConfig: FooterConfig = {
   ],
   contact: [
     {
-        title: "officialmkrsports@gmail.com",
+        title: "support@mkr.com",
         href: "",
         icon: "mail"
     },
@@ -51,10 +51,10 @@ export const footerConfig: FooterConfig = {
         href: "",
         icon: "phone"
     },
-    {
-        title: "City Sports Arena, Turf 1",
-        href: "",
-        icon: "map"
-    },
+    // {
+    //     title: "City Sports Arena, Turf 1",
+    //     href: "",
+    //     icon: "map"
+    // },
   ]
 };

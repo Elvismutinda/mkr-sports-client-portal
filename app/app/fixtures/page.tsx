@@ -2,10 +2,13 @@ import { CustomHeader } from '@/components/CustomHeader'
 
 function page() {
   return (
-    <CustomHeader
-      title="Fixtures"
-      subtitle="Upcoming matches and events"
-    />
+    <div className="px-6 py-12 md:px-16">
+      <CustomHeader
+        title="Fixtures"
+        subtitle="View your upcoming and past matches"
+      />
+
+    </div>
   )
 }
 

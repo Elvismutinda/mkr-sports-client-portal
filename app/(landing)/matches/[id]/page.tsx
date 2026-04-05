@@ -6,7 +6,7 @@ import RoasterPreview from "@/components/match/RoasterPreview";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Position } from "@/types/types";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -42,7 +42,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
   const match = await res.json();
 
   const isRegistered = match.players.some(
-    (p: { id: string | undefined }) => p.id === currentUser?.id
+    (p: { id: string | undefined }) => p.id === currentUser?.id,
   );
 
   const isFull = match.players.length >= match.maxPlayers;
@@ -65,7 +65,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
             href="/"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "mb-8 p-2 tracking-normal! opacity-60 hover:opacity-100"
+              "mb-8 p-2 tracking-normal! opacity-60 hover:opacity-100",
             )}
           >
             <svg
@@ -141,13 +141,22 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   <div className="flex justify-around items-center">
                     {playersByPosition("Forward").map((p) => (
                       <div key={p.id} className="group relative">
-                        <Image
+                        {/* <Image
                           src={p.avatarUrl}
                           alt={p.name}
                           width={48}
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
-                        />
+                        /> */}
+                        <div className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform bg-mkr-slate flex items-center justify-center">
+                          <span className="text-xs font-black text-mkr-yellow uppercase">
+                            {p.name
+                              .split(" ")
+                              .map((n: string) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </span>
+                        </div>
                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
@@ -163,13 +172,22 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   <div className="flex justify-around items-center">
                     {playersByPosition("Midfielder").map((p) => (
                       <div key={p.id} className="group relative">
-                        <Image
+                        {/* <Image
                           src={p.avatarUrl}
                           alt={p.name}
                           width={48}
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
-                        />
+                        /> */}
+                        <div className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform bg-mkr-slate flex items-center justify-center">
+                          <span className="text-xs font-black text-mkr-yellow uppercase">
+                            {p.name
+                              .split(" ")
+                              .map((n: string) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </span>
+                        </div>
                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
@@ -185,13 +203,22 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   <div className="flex justify-around items-center">
                     {playersByPosition("Defender").map((p) => (
                       <div key={p.id} className="group relative">
-                        <Image
+                        {/* <Image
                           src={p.avatarUrl}
                           alt={p.name}
                           width={48}
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
-                        />
+                        /> */}
+                        <div className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform bg-mkr-slate flex items-center justify-center">
+                          <span className="text-xs font-black text-mkr-yellow uppercase">
+                            {p.name
+                              .split(" ")
+                              .map((n: string) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </span>
+                        </div>
                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
@@ -207,13 +234,22 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   <div className="flex justify-center">
                     {playersByPosition("Goalkeeper").map((p) => (
                       <div key={p.id} className="group relative">
-                        <Image
+                        {/* <Image
                           src={p.avatarUrl}
                           alt={p.name}
                           width={48}
                           height={48}
                           className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform"
-                        />
+                        /> */}
+                        <div className="w-12 h-12 rounded-full border-2 border-mkr-yellow shadow-lg group-hover:scale-110 transition-transform bg-mkr-slate flex items-center justify-center">
+                          <span className="text-xs font-black text-mkr-yellow uppercase">
+                            {p.name
+                              .split(" ")
+                              .map((n: string) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </span>
+                        </div>
                         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-white uppercase whitespace-nowrap bg-mkr-navy/80 px-2 py-0.5 rounded  border border-mkr-yellow/30">
                           {p.name}
                         </div>
@@ -260,7 +296,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     —{" "}
                     {new Date(gameDate.getTime() + 3600000).toLocaleTimeString(
                       [],
-                      { hour: "2-digit", minute: "2-digit" }
+                      { hour: "2-digit", minute: "2-digit" },
                     )}
                   </span>
                 </li>
@@ -325,14 +361,22 @@ export default async function MatchDetailsPage({ params }: PageProps) {
 
           <div className="w-full lg:w-95">
             <div className="sticky top-28 bg-mkr-dark border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-8">
-              <div className="flex justify-between items-center border-b border-white/5 pb-6">
-                <h3 className="text-xl font-black text-white uppercase  tracking-tighter">
-                  Register Now
-                </h3>
-                <span className="text-mkr-yellow font-black text-lg ">
-                  KSH. {priceKES}
-                </span>
-              </div>
+              {isRegistered ? (
+                <div className="flex border-b border-white/5 pb-6">
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                    You&apos;re In!
+                  </h3>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center border-b border-white/5 pb-6">
+                  <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                    Register Now
+                  </h3>
+                  <span className="text-mkr-yellow font-black text-lg ">
+                    KSH. {priceKES}
+                  </span>
+                </div>
+              )}
 
               {!match.completed ? (
                 isRegistered ? (
