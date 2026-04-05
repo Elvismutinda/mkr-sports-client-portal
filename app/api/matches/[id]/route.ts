@@ -40,7 +40,7 @@ export async function GET(_req: Request, { params }: RouteContext) {
       isFull: players.length >= foundMatch.maxPlayers,
     });
   } catch (error) {
-    console.error("[MATCH_GET]", error);
+    console.error("Failed to fetch match: ", error);
     return NextResponse.json(
       { error: "Failed to fetch match" },
       { status: 500 }
