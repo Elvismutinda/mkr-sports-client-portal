@@ -12,7 +12,12 @@ export default function LeaveMatchButton({ matchId }: { matchId: string }) {
     startTransition(async () => {
       try {
         await leaveMatch(matchId);
-        toast.success("You have left the match.");
+        toast.success(
+          "You have left the match. You will receive a refund if applicable.",
+          {
+            duration: 5000,
+          },
+        );
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Something went wrong";
