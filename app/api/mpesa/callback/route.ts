@@ -1,7 +1,7 @@
 import { db } from "@/lib/db/db";
 import { match, matchPlayers, payments, user } from "@/lib/db/schema";
 import { sendMatchRegistrationEmail } from "@/lib/mail";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 // Always 200 — Safaricom retries on any other status code,
@@ -14,14 +14,19 @@ export async function POST(req: Request) {
     const result = body?.Body?.stkCallback;
 
     if (!result) {
-      console.error("[mpesa/callback] Malformed payload:", JSON.stringify(body));
+      console.error(
+        "[mpesa/callback] Malformed payload:",
+        JSON.stringify(body),
+      );
       return OK();
     }
 
     const checkoutId: string = result.CheckoutRequestID;
     const success: boolean = result.ResultCode === 0;
 
-    console.log(`[mpesa/callback] checkoutId=${checkoutId} success=${success} code=${result.ResultCode}`);
+    console.log(
+      `[mpesa/callback] checkoutId=${checkoutId} success=${success} code=${result.ResultCode}`,
+    );
 
     // 1. Find payment record
     const [payment] = await db
@@ -30,7 +35,10 @@ export async function POST(req: Request) {
       .where(eq(payments.checkoutRequestId, checkoutId));
 
     if (!payment) {
-      console.error("[mpesa/callback] No payment record for checkoutId:", checkoutId);
+      console.error(
+        "[mpesa/callback] No payment record for checkoutId:",
+        checkoutId,
+      );
       return OK();
     }
 
@@ -47,7 +55,9 @@ export async function POST(req: Request) {
         .set({ status: "failed" })
         .where(eq(payments.id, payment.id));
 
-      console.log(`[mpesa/callback] Failed. code=${result.ResultCode} desc=${result.ResultDesc}`);
+      console.log(
+        `[mpesa/callback] Failed. code=${result.ResultCode} desc=${result.ResultDesc}`,
+      );
       return OK();
     }
 
@@ -57,7 +67,7 @@ export async function POST(req: Request) {
       | undefined;
 
     const mpesaReceiptNumber = mpesaItems?.find(
-      (i) => i.Name === "MpesaReceiptNumber"
+      (i) => i.Name === "MpesaReceiptNumber",
     )?.Value as string | undefined;
 
     // 5. Transaction: mark payment success + insert player (idempotent)
@@ -74,8 +84,8 @@ export async function POST(req: Request) {
         .where(
           and(
             eq(matchPlayers.matchId, payment.matchId),
-            eq(matchPlayers.playerId, payment.userId)
-          )
+            eq(matchPlayers.playerId, payment.userId),
+          ),
         );
 
       if (!alreadyEnlisted) {
@@ -90,8 +100,24 @@ export async function POST(req: Request) {
           position: playerRecord.position,
         });
 
+        // Append userId to match.registeredPlayerIds
+        const [currentMatch] = await tx
+          .select({ registeredPlayerIds: match.registeredPlayerIds })
+          .from(match)
+          .where(eq(match.id, payment.matchId));
+
+        await tx
+          .update(match)
+          .set({
+            registeredPlayerIds: sql`${JSON.stringify([
+              ...(currentMatch.registeredPlayerIds ?? []),
+              payment.userId,
+            ])}::jsonb`,
+          })
+          .where(eq(match.id, payment.matchId));
+
         console.log(
-          `[mpesa/callback] Enlisted player=${payment.userId} match=${payment.matchId} receipt=${mpesaReceiptNumber}`
+          `[mpesa/callback] Enlisted player=${payment.userId} match=${payment.matchId} receipt=${mpesaReceiptNumber}`,
         );
       }
     });
@@ -125,7 +151,10 @@ export async function POST(req: Request) {
           console.log(`[mpesa/callback] Email sent to ${userData.email}`);
         }
       } catch (emailErr) {
-        console.error("[mpesa/callback] Email failed (player still added):", emailErr);
+        console.error(
+          "[mpesa/callback] Email failed (player still added):",
+          emailErr,
+        );
       }
     }
 
