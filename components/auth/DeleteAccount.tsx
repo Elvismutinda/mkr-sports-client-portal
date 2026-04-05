@@ -21,7 +21,7 @@ const DeleteAccount = () => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    const toastId = toast.loading("Terminating operative clearance...");
+    const toastId = toast.loading("Deleting account...");
     startTransition(() => {
       deleteAccount().then((data) => {
         if (data?.error) {
