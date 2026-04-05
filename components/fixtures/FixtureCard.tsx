@@ -61,7 +61,7 @@ export function FixtureCard({ fixture }: { fixture: Fixture }) {
               Home
             </p>
             <p
-              className="font-black text-sm uppercase text-white truncate max-w-[100px]"
+              className="font-black text-sm uppercase text-white truncate max-w-25"
             >
               {fixture.homeTeam.length > 0 ? "Home" : "TBD"}
             </p>
@@ -74,7 +74,7 @@ export function FixtureCard({ fixture }: { fixture: Fixture }) {
               Away
             </p>
             <p
-              className="font-black text-sm uppercase text-white truncate max-w-[100px]"
+              className="font-black text-sm uppercase text-white truncate max-w-25"
             >
               {fixture.awayTeam.length > 0 ? "Away" : "TBD"}
             </p>

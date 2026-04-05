@@ -10,14 +10,14 @@ export const statusConfig: Record<
     glow: string;
   }
 > = {
-  "UPCOMING OPERATION": {
+  UPCOMING: {
     bg: "bg-yellow-400",
     text: "text-black",
     dot: "bg-yellow-400",
     border: "border-yellow-400/20",
     glow: "shadow-yellow-400/10",
   },
-  "ONGOING OPERATION": {
+  ONGOING: {
     bg: "bg-emerald-400",
     text: "text-black",
     dot: "bg-emerald-400",

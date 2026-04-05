@@ -34,9 +34,24 @@ export async function GET(_req: Request, { params }: RouteContext) {
       .innerJoin(user, eq(matchPlayers.playerId, user.id))
       .where(eq(matchPlayers.matchId, foundMatch.id));
 
+    // Derive team membership from the match's homeTeam / awayTeam ID arrays.
+    // Players not yet assigned to either team are considered "unassigned" —
+    // the frontend pitch visualizer handles that case gracefully.
+    const homeTeamIds: string[] = foundMatch.homeTeam ?? [];
+    const awayTeamIds: string[] = foundMatch.awayTeam ?? [];
+
+    const playersWithTeam = players.map((p) => ({
+      ...p,
+      team: homeTeamIds.includes(p.id)
+        ? ("home" as const)
+        : awayTeamIds.includes(p.id)
+          ? ("away" as const)
+          : ("unassigned" as const),
+    }));
+
     return NextResponse.json({
       ...foundMatch,
-      players,
+      players: playersWithTeam,
       isFull: players.length >= foundMatch.maxPlayers,
     });
   } catch (error) {

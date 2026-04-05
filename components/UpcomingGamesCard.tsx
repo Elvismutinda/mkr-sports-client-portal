@@ -9,91 +9,98 @@ interface Props {
 
 const UpcomingGamesCard = ({ matches }: Props) => {
   return (
-    <section id="matches" className="py-24 px-4 max-w-5xl mx-auto">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-black text-white mb-4 uppercase">
+    <section id="matches" className="pb-24 px-6 max-w-6xl mx-auto">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-3">
           Live Fixtures
         </h2>
-        <div className="w-20 h-1 bg-mkr-yellow mx-auto"></div>
+        <div className="w-16 h-1 bg-mkr-yellow mx-auto rounded-full" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {matches?.length > 0 ? (
-          matches.map((match) => (
-            <div
-              key={match.id}
-              className="bg-mkr-slate/50 border border-white/10 rounded-3xl p-8 hover:border-mkr-yellow transition-all duration-300 relative group overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
-                <svg
-                  width="100"
-                  height="100"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
-              </div>
-
-              <div className="flex justify-between items-start mb-8">
-                <div>
-                  <div className="text-mkr-yellow font-black uppercase text-sm mb-2 tracking-widest">
-                    {new Date(match.date).toLocaleDateString("en-KE", {
-                      weekday: "short",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </div>
-                  <div className="text-4xl font-black text-white">
-                    {new Date(match.date).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </div>
-                </div>
-                <div className="bg-mkr-navy/80 px-4 py-2 rounded-xl border border-white/10 text-right">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
-                    Confirmed Players
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-black text-mkr-yellow">
-                      {match.registeredPlayerIds.length}/{match.maxPlayers}
-                    </span>
-                    {/* <span className="text-xs font-bold text-slate-400">
-                    PLAYERS
-                  </span> */}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 text-slate-300 mb-10 font-bold">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+          matches.map((match) => {
+            const matchDate = new Date(match.date);
+            return (
+              <div
+                key={match.id}
+                className="relative bg-[#0d1117] border border-white/5 rounded-[1.5rem] p-5 hover:border-mkr-yellow/30 transition-all duration-300 flex flex-col gap-4 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-3 opacity-[0.04] pointer-events-none select-none">
                   <svg
-                    width="18"
-                    height="18"
+                    width="80"
+                    height="80"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="text-white"
+                  >
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                  </svg>
+                </div>
+
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="text-mkr-yellow font-black uppercase text-[10px] tracking-widest mb-1">
+                      {matchDate.toLocaleDateString("en-KE", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </div>
+                    <div className="text-2xl font-black text-white leading-none">
+                      {matchDate.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="bg-mkr-navy/80 px-3 py-1.5 rounded-lg border border-white/10 text-right">
+                    <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">
+                      Confirmed
+                    </div>
+                    <div className="text-sm font-black text-mkr-yellow">
+                      {match.registeredPlayerIds?.length ?? 0}
+                      <span className="text-slate-500 font-black text-xs">
+                        /{match.maxPlayers}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-slate-300">
+                  <svg
+                    width="12"
+                    height="12"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
+                    className="shrink-0 text-slate-500"
                   >
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
                   </svg>
+                  <span className="text-xs font-black tracking-wider truncate">
+                    {match.location}
+                  </span>
                 </div>
-                {match.location}
-              </div>
 
-              <Link
-                href={`/matches/${match.id}`}
-                className={cn(buttonVariants({ variant: "primary" }), "h-10")}
-              >
-                View Game Details
-              </Link>
-            </div>
-          ))
+                <Link
+                  href={`/matches/${match.id}`}
+                  className={cn(
+                    buttonVariants({ variant: "primary" }),
+                    "w-full h-9 text-[10px] tracking-widest uppercase font-black mt-auto"
+                  )}
+                >
+                  View Match Details
+                </Link>
+              </div>
+            );
+          })
         ) : (
           <div className="col-span-full py-24 text-center bg-white/5 rounded-3xl border-2 border-dashed border-white/10">
-            <p className="text-slate-500 font-bold text-xl uppercase tracking-widest">
+            <p className="text-slate-500 font-bold text-sm uppercase tracking-widest">
               No Active Fixtures Found
             </p>
           </div>

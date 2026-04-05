@@ -18,7 +18,7 @@ export function CustomHeader({ title, subtitle, activeCount }: Props) {
         <div className="mt-5 flex items-center gap-3">
           <span className="inline-flex items-center gap-2 border border-yellow-400/40 text-yellow-400 text-[10px] font-black tracking-[0.2em] uppercase px-4 py-2 rounded-lg bg-yellow-400/5">
             <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
-            {activeCount} Active Unit{activeCount !== 1 ? "s" : ""}
+            {activeCount} Player{activeCount !== 1 ? "s" : ""}
           </span>
         </div>
       )}

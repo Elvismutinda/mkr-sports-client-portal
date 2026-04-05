@@ -60,13 +60,19 @@ export interface MediaItem {
   timestamp: string;
 }
 
-export interface Tournament {
-  id: number;
+interface Standing {
+  rank: number;
   name: string;
-  location: string;
-  description: string;
-  prizePool: string;
-  commencement: string;
+  points: number;
+}
+
+export interface Tournament {
+  id: string;
+  name: string;
+  location?: string;
+  description?: string;
+  prizePool: number;
+  commencement?: string;
   status: TournamentStatus;
   media?: MediaItem[];
   participants?: {
@@ -75,12 +81,13 @@ export interface Tournament {
     email: string;
     position: Position;
     avatarUrl?: string;
-  }[]; // Array of player/agent participants
+  }[];
+  standings?: Standing[];
 }
 
 export type TournamentStatus =
-  | "UPCOMING OPERATION"
-  | "ONGOING OPERATION"
+  | "UPCOMING"
+  | "ONGOING"
   | "COMPLETED";
 
 export type FixtureStatus = "upcoming" | "completed" | "live";
@@ -111,4 +118,24 @@ export interface FixturePlayer {
 export interface FixtureDetail {
   fixture: Fixture;
   players: FixturePlayer[];
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  badge: string; // initials fallback
+  type: string;
+  bio: string;
+  stats: { ops: number; won: number; rtg: number };
+  members: string[]; // avatar URLs or initials
+}
+
+export interface Turf {
+  id: string;
+  name: string;
+  area: string;
+  city: string;
+  rating: number;
+  amenities: string[];
+  mapsQuery: string;
 }

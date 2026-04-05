@@ -117,7 +117,6 @@ const RegisterMatchForm = ({ match }: Props) => {
           />
         </div>
 
-        {/* Terms checkbox — wired into react-hook-form so it blocks submission */}
         <FormField
           control={form.control}
           name="termsAccepted"

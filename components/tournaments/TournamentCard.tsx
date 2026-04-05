@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Tournament } from "@/types/types";
 import { statusConfig } from "@/config/status";
 import { PinIcon, TrophyIcon, CalendarIcon } from "./Icons";
+import { Button } from "../ui/button";
 
 export function TournamentCard({ tournament }: { tournament: Tournament }) {
   const [hovered, setHovered] = useState(false);
@@ -25,11 +26,10 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Status Badge */}
       <div
         className={`absolute top-0 right-6 px-3 py-1.5 rounded-b-lg ${cfg.bg} ${cfg.text} text-[10px] font-black tracking-[0.18em] uppercase`}
       >
-        {tournament.status === "ONGOING OPERATION" && (
+        {tournament.status === "ONGOING" && (
           <span
             className={`inline-block w-1.5 h-1.5 rounded-full ${cfg.dot} mr-1.5 animate-pulse`}
           />
@@ -37,7 +37,6 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
         {tournament.status}
       </div>
 
-      {/* Title */}
       <div>
         <h2
           className={`font-black text-xl md:text-2xl uppercase leading-tight ${
@@ -55,7 +54,6 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
         </div>
       </div>
 
-      {/* Description */}
       <p
         className={`text-sm leading-relaxed italic font-medium ${
           isCompleted ? "text-slate-600" : "text-slate-300"
@@ -64,7 +62,6 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
         &ldquo;{tournament.description}&rdquo;
       </p>
 
-      {/* Stats Row */}
       <div className="grid grid-cols-2 gap-3">
         <div className="flex items-center gap-3 bg-black/30 rounded-xl px-4 py-3">
           <span className={isCompleted ? "text-slate-500" : "text-yellow-400"}>
@@ -79,7 +76,7 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
                 isCompleted ? "text-slate-500" : "text-white"
               }`}
             >
-              {tournament.prizePool}
+              KSH {tournament.prizePool.toLocaleString()}
             </p>
           </div>
         </div>
@@ -102,17 +99,12 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
         </div>
       </div>
 
-      {/* CTA */}
-      <button
+      <Button
         disabled={isCompleted}
-        className={`w-full py-4 rounded-xl text-xs font-black tracking-[0.2em] uppercase transition-all duration-200 ${
-          isCompleted
-            ? "bg-black/20 text-slate-600 cursor-not-allowed"
-            : "bg-black/40 text-white hover:bg-yellow-400 hover:text-black"
-        }`}
+        variant={isCompleted ? "secondary" : "primary"}
       >
-        {isCompleted ? "OPERATION CLOSED" : "ENLIST SQUAD INTEL"}
-      </button>
+        {isCompleted ? "TOURNAMENT CLOSED" : "REGISTER TEAM"}
+      </Button>
     </div>
   );
 }

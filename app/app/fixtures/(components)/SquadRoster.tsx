@@ -43,7 +43,7 @@ export function SquadRoster({
                 />
               </div> */}
               <div
-                className={`w-9 h-9 rounded-lg border flex-shrink-0 flex items-center justify-center text-[11px] font-black tracking-wide ${
+                className={`w-9 h-9 rounded-lg border shrink-0 flex items-center justify-center text-[11px] font-black tracking-wide ${
                   isMe
                     ? "border-yellow-400/30 bg-yellow-400/10 text-yellow-400"
                     : "border-white/10 bg-slate-800 text-slate-400"

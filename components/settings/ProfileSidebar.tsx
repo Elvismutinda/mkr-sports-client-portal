@@ -29,10 +29,8 @@ export const ProfileSidebar: React.FC<Props> = ({ user }) => {
   return (
     <div className="lg:w-1/3 shrink-0">
       <div className="sticky top-8 space-y-6">
-        {/* Profile Summary Card */}
         <div className="bg-mkr-dark border border-white/5 rounded-[2.5rem] p-8 flex flex-col items-center text-center shadow-2xl">
           <div className="relative mb-6">
-            {/* Initials avatar */}
             <div className="w-40 h-40 rounded-full border-4 border-mkr-yellow/20 shadow-2xl bg-mkr-navy flex items-center justify-center">
               <span className="text-4xl font-black text-mkr-yellow tracking-tighter select-none">
                 {initials}

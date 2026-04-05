@@ -134,7 +134,6 @@ export default function Dashboard({
 
   return (
     <div className="px-6 py-8 lg:px-12 max-w-6xl mx-auto space-y-10">
-      {/* Hero greeting */}
       <motion.div
         custom={0}
         variants={fadeUp}
@@ -149,7 +148,6 @@ export default function Dashboard({
         </div>
       </motion.div>
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {statCards.map((s, i) => (
           <motion.div
@@ -171,9 +169,7 @@ export default function Dashboard({
         ))}
       </div>
 
-      {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Upcoming Fixtures */}
         <motion.div
           custom={7}
           variants={fadeUp}
@@ -244,7 +240,6 @@ export default function Dashboard({
           )}
         </motion.div>
 
-        {/* Recent Results */}
         <motion.div
           custom={8}
           variants={fadeUp}

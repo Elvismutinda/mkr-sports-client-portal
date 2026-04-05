@@ -147,7 +147,6 @@ export default function AppSideBar({
                     )}
                   </button>
 
-                  {/* Children */}
                   {!collapsed && isOpen && (
                     <div className="mt-0.5 ml-3 pl-3 border-l border-white/10 space-y-0.5">
                       {item.children!.map((child) => (
