@@ -1,3 +1,4 @@
+import { statusConfig } from "@/config/status";
 import { Tournament } from "@/types/types";
 import Link from "next/link";
 
@@ -26,6 +27,11 @@ const TOURNAMENTS: Tournament[] = [
 ];
 
 export default function TournamentsSection() {
+  const getStatusStyles = (status: Tournament["status"]) => {
+    const config = statusConfig[status];
+    return `${config.bg} ${config.text} ${config.dot} ${config.border} ${config.glow}`;
+  };
+
   return (
     <section className="pb-24 px-6 max-w-6xl mx-auto">
       <div className="text-center mb-10">
@@ -41,10 +47,10 @@ export default function TournamentsSection() {
             key={tournament.id}
             className="relative bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7 hover:border-mkr-yellow/30 transition-all duration-300 overflow-hidden flex flex-col gap-5"
           >
-            <div className="absolute top-0 right-0">
-              <div className="bg-mkr-yellow text-mkr-navy text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl rounded-tr-[1.75rem]">
-                {tournament.status}
-              </div>
+            <div
+              className={`absolute top-0 right-6 px-3 py-1.5 rounded-b-lg ${getStatusStyles(tournament.status)} text-[10px] font-black tracking-[0.18em] uppercase`}
+            >
+              <div>{tournament.status}</div>
             </div>
 
             <div className="pr-24">
@@ -58,10 +64,7 @@ export default function TournamentsSection() {
 
             <div className="space-y-2.5">
               {(tournament.standings ?? []).map((s) => (
-                <div
-                  key={s.rank}
-                  className="flex items-center justify-between"
-                >
+                <div key={s.rank} className="flex items-center justify-between">
                   <span className="text-xs font-black text-slate-300 tracking-wider">
                     #{s.rank} {s.name}
                   </span>

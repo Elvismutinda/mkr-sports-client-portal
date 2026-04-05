@@ -29,11 +29,6 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
       <div
         className={`absolute top-0 right-6 px-3 py-1.5 rounded-b-lg ${cfg.bg} ${cfg.text} text-[10px] font-black tracking-[0.18em] uppercase`}
       >
-        {tournament.status === "ONGOING" && (
-          <span
-            className={`inline-block w-1.5 h-1.5 rounded-full ${cfg.dot} mr-1.5 animate-pulse`}
-          />
-        )}
         {tournament.status}
       </div>
 
