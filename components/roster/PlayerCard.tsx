@@ -131,7 +131,6 @@ export function PlayerCard({ player }: Props) {
         <div className="min-w-0">
           <h3
             className="font-black text-xl text-white leading-tight truncate"
-            style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
           >
             {displayName}
           </h3>

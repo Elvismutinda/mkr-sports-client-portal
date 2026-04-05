@@ -82,3 +82,33 @@ export type TournamentStatus =
   | "UPCOMING OPERATION"
   | "ONGOING OPERATION"
   | "COMPLETED";
+
+export type FixtureStatus = "upcoming" | "completed" | "live";
+
+export interface Fixture {
+  id: string;
+  date: string;
+  location: string;
+  mode: string;
+  price: string;
+  homeTeam: string[];
+  awayTeam: string[];
+  maxPlayers: number;
+  completed: boolean;
+  score: { home: number; away: number } | null;
+  matchReport: string | null;
+  isPublic: boolean;
+  playerPosition: Position;
+}
+
+export interface FixturePlayer {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  position: string;
+}
+
+export interface FixtureDetail {
+  fixture: Fixture;
+  players: FixturePlayer[];
+}

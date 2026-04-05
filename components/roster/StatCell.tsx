@@ -20,7 +20,6 @@ export function StatCell({
         className={`font-black text-xl leading-none ${
           highlight ? "text-yellow-400" : "text-white"
         }`}
-        style={{ fontFamily: "'Anton', 'Impact', sans-serif" }}
       >
         {value}
       </span>
