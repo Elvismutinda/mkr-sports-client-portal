@@ -1,7 +1,7 @@
-import { Fixture } from "@/types/types";
+import { Match } from "@/types/types";
 import { Calendar, Clock, MapPin, Swords, Banknote } from "lucide-react";
 
-export function MatchInfoPanel({ fixture }: { fixture: Fixture }) {
+export function MatchInfoPanel({ fixture }: { fixture: Match }) {
   const gameDate = new Date(fixture.date);
 
   const priceKES = new Intl.NumberFormat("en-KE", {
@@ -44,9 +44,7 @@ export function MatchInfoPanel({ fixture }: { fixture: Fixture }) {
 
   return (
     <section>
-      <h2
-        className="text-lg font-black uppercase tracking-tight text-white mb-5"
-      >
+      <h2 className="text-lg font-black uppercase tracking-tight text-white mb-5">
         Match Details
       </h2>
       <ul className="space-y-3">
@@ -55,8 +53,8 @@ export function MatchInfoPanel({ fixture }: { fixture: Fixture }) {
             key={label}
             className="flex items-center gap-3 text-slate-300 font-semibold text-sm"
           >
-            <span className="text-yellow-400 flex-shrink-0">{icon}</span>
-            <span className="text-slate-500 uppercase text-[10px] tracking-widest w-16 flex-shrink-0">
+            <span className="text-yellow-400 shrink-0">{icon}</span>
+            <span className="text-slate-500 uppercase text-[10px] tracking-widest w-16 shrink-0">
               {label}
             </span>
             <span>{value}</span>

@@ -12,7 +12,9 @@ const positionConfig: Record<
   Goalkeeper: { label: "GOA", bg: "bg-orange-500", text: "text-white" },
 };
 
-export function PositionBadge({ position }: { position: Position }) {
+export function PositionBadge({ position }: { position: Position | null }) {
+  if (!position) return null;
+
   const cfg = positionConfig[position] ?? {
     label: position.slice(0, 3).toUpperCase(),
     bg: "bg-slate-600",

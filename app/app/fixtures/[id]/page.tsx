@@ -14,17 +14,15 @@ interface PageProps {
 
 export default async function FixtureDetailPage({ params }: PageProps) {
   const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect("/login");
-  }
+  if (!session?.user?.id) redirect("/login");
 
   const { id } = await params;
   const data = await getFixtureById(id, session.user.id);
-
   if (!data) notFound();
 
   const { fixture, players } = data;
+  const playerPosition =
+    players.find((p) => p.id === session.user.id)?.position ?? null;
 
   return (
     <div className="px-6 py-12 md:px-16">
@@ -37,7 +35,7 @@ export default async function FixtureDetailPage({ params }: PageProps) {
           Back to Fixtures
         </Link>
 
-        <FixtureDetailHeader fixture={fixture} />
+        <FixtureDetailHeader match={fixture} playerPosition={playerPosition} />
 
         <div className="flex flex-col lg:flex-row gap-10">
           <div className="flex-1 space-y-10">
@@ -48,7 +46,6 @@ export default async function FixtureDetailPage({ params }: PageProps) {
               matchReport={fixture.matchReport}
             />
           </div>
-
           <div className="w-full lg:w-80 space-y-6">
             <SquadRoster players={players} currentUserId={session.user.id} />
           </div>

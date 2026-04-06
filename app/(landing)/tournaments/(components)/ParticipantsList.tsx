@@ -1,12 +1,5 @@
-import { Position } from "@/types/types";
-
-interface Participant {
-  id: string;
-  name: string;
-  email: string;
-  position: Position;
-  avatarUrl?: string;
-}
+import { Participant, Position } from "@/types/types";
+import Image from "next/image";
 
 interface Props {
   participants: Participant[];
@@ -37,6 +30,7 @@ export default function ParticipantsList({ participants }: Props) {
           {participants.length} total
         </span>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {participants.map((p) => (
           <div
@@ -44,19 +38,29 @@ export default function ParticipantsList({ participants }: Props) {
             className="flex items-center gap-3 bg-mkr-navy/50 border border-white/5 rounded-xl px-4 py-3 hover:border-white/10 transition-colors"
           >
             <div className="w-9 h-9 rounded-full bg-mkr-navy border border-white/10 flex items-center justify-center shrink-0">
-              <span className="text-xs font-black text-slate-300 uppercase">
-                {p.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-              </span>
+              {p.avatarUrl ? (
+                <Image src={p.avatarUrl} alt={p.name} className="w-full h-full rounded-full object-cover" width={36} height={36} />
+              ) : (
+                <span className="text-xs font-black text-slate-300 uppercase">
+                  {p.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                </span>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-black text-white uppercase italic tracking-wide truncate">
                 {p.name}
               </p>
-              <span
-                className={`inline-block text-[8px] font-black uppercase tracking-widest border rounded px-1.5 py-0.5 mt-0.5 ${POSITION_COLOR[p.position]}`}
-              >
-                {POSITION_SHORT[p.position]}
-              </span>
+              {p.position ? (
+                <span
+                  className={`inline-block text-[8px] font-black uppercase tracking-widest border rounded px-1.5 py-0.5 mt-0.5 ${POSITION_COLOR[p.position]}`}
+                >
+                  {POSITION_SHORT[p.position]}
+                </span>
+              ) : (
+                <span className="inline-block text-[8px] font-black uppercase tracking-widest border rounded px-1.5 py-0.5 mt-0.5 text-slate-500 border-slate-500/20 bg-slate-500/5">
+                  N/A
+                </span>
+              )}
             </div>
           </div>
         ))}

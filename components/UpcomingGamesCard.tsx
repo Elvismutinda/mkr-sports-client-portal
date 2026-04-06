@@ -101,7 +101,7 @@ const UpcomingGamesCard = ({ matches }: Props) => {
         ) : (
           <div className="col-span-full py-24 text-center bg-white/5 rounded-3xl border-2 border-dashed border-white/10">
             <p className="text-slate-500 font-bold text-sm uppercase tracking-widest">
-              No Active Fixtures Found
+              No Active Fixtures
             </p>
           </div>
         )}

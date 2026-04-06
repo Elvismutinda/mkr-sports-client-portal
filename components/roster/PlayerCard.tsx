@@ -143,19 +143,19 @@ export function PlayerCard({ player }: Props) {
       <div className="grid grid-cols-3 gap-2 mt-2">
         <StatCell
           icon={<PulseIcon />}
-          value={player.stats.matchesPlayed}
+          value={player.stats?.matchesPlayed ?? 0}
           label="OPS"
         />
         <StatCell
           icon={<TargetIcon />}
-          value={player.stats.goals}
+          value={player.stats?.goals ?? 0}
           label="Goals"
-          highlight={player.stats.goals > 0}
+          highlight={(player.stats?.goals ?? 0) > 0}
         />
-        <StatCell icon={<TrophyIcon />} value={player.stats.motm} label="MVP" />
+        <StatCell icon={<TrophyIcon />} value={player.stats?.motm ?? 0} label="MVP" />
       </div>
 
-      <SkillIndexBar rating={player.stats.rating} />
+      <SkillIndexBar rating={player.stats?.rating ?? 0} />
     </div>
   );
 }

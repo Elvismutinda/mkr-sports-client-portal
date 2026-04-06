@@ -17,7 +17,7 @@ export default function TeamCard({ team }: Props) {
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 rounded-2xl bg-mkr-navy border border-white/10 flex items-center justify-center shrink-0">
           <span className="text-xl font-black text-slate-300">
-            {team.badge}
+            {team.badgeFallback ?? "??"}
           </span>
         </div>
         <div>
@@ -37,7 +37,7 @@ export default function TeamCard({ team }: Props) {
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
           <div className="text-xl font-black text-white leading-none mb-1">
-            {team.stats.ops}
+            {team.stats?.matchesPlayed ?? 0}
           </div>
           <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
             Ops
@@ -45,7 +45,7 @@ export default function TeamCard({ team }: Props) {
         </div>
         <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
           <div className="text-xl font-black text-mkr-yellow leading-none mb-1">
-            {team.stats.won}
+            {team.stats?.wins ?? 0}
           </div>
           <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
             Won
@@ -53,7 +53,7 @@ export default function TeamCard({ team }: Props) {
         </div>
         <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
           <div className="text-xl font-black text-mkr-yellow leading-none mb-1">
-            {team.stats.rtg}
+            {team.stats?.rating?.toFixed(1) ?? "—"}
           </div>
           <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
             RTG

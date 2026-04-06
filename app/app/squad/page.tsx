@@ -5,9 +5,10 @@ import { Player } from "@/types/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-// Replace with your real DB/API call
 async function getPlayers(): Promise<Player[]> {
-  const res = await fetch(`${BASE_URL}/api/players`, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/api/player/roster`, {
+    cache: "no-store",
+  });
   if (!res.ok) return [];
   return res.json();
 }
@@ -18,11 +19,10 @@ export default async function SquadPage() {
   return (
     <div className="px-6 py-12 md:px-16">
       <CustomHeader
-        title="Personnel Roster"
+        title="Team Members"
         subtitle="Your team, roster, and player profiles"
         activeCount={players.length}
       />
-
       {players.length === 0 ? (
         <EmptyRoster />
       ) : (

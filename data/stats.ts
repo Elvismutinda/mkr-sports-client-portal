@@ -21,5 +21,8 @@ export async function getPlayerStats(userId: string): Promise<Player["stats"]> {
     assists: 0,
     motm: 0,
     rating: matchesPlayed > 0 ? 6.5 : 0,
+    wins: 0,
+    losses: 0,
+    draws: 0,
   };
 }

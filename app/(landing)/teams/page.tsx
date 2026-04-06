@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import TeamSearchBar from "@/app/(landing)/teams/(components)/TeamSearchBar";
 import TeamGrid from "@/app/(landing)/teams/(components)/TeamGrid";
-import { Team } from "@/types/types";
+import { DEFAULT_PAGE_SIZE, PaginationMeta, Team } from "@/types/types";
 import {
   Pagination,
   PaginationContent,
@@ -14,22 +14,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const PAGE_SIZE = 8;
-
-interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 export default function TeamsPage() {
   const [query, setQuery] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
   const [pagination, setPagination] = useState<PaginationMeta>({
     total: 0,
     page: 1,
-    limit: PAGE_SIZE,
+    limit: DEFAULT_PAGE_SIZE,
     totalPages: 1,
   });
   const [loading, setLoading] = useState(true);
@@ -43,7 +34,7 @@ export default function TeamsPage() {
       const params = new URLSearchParams({
         q,
         page: String(page),
-        limit: String(PAGE_SIZE),
+        limit: String(DEFAULT_PAGE_SIZE),
       });
       const res = await fetch(`/api/teams?${params}`);
       if (!res.ok) throw new Error("Failed to load teams");
