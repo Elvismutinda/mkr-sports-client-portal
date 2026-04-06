@@ -1,6 +1,6 @@
 {
-  "id": "669a4f8c-f11f-4c9e-a440-6e8a64dbbdc3",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f38e1940-8a57-43db-97f8-2db0250e16fa",
+  "prevId": "669a4f8c-f11f-4c9e-a440-6e8a64dbbdc3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2422,7 +2422,7 @@
           "type": "player_positions",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "avatar_url": {
           "name": "avatar_url",

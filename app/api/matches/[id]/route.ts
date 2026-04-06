@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
-import { match, matchPlayers, user } from "@/lib/db/schema";
+import { match, matchPlayer, user } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 interface RouteContext {
@@ -20,19 +20,19 @@ export async function GET(_req: Request, { params }: RouteContext) {
       return NextResponse.json({ error: "Match not found" }, { status: 404 });
     }
 
-    // Always query matchPlayers — this is the source of truth for who is registered.
+    // Always query matchPlayer — this is the source of truth for who is registered.
     // Do NOT gate on registeredPlayerIds.length: that field is legacy/unused
-    // and will always be [] since registration goes through matchPlayers now.
+    // and will always be [] since registration goes through matchPlayer now.
     const players = await db
       .select({
         id: user.id,
         name: user.name,
         avatarUrl: user.avatarUrl,
-        position: matchPlayers.position,
+        position: matchPlayer.position,
       })
-      .from(matchPlayers)
-      .innerJoin(user, eq(matchPlayers.playerId, user.id))
-      .where(eq(matchPlayers.matchId, foundMatch.id));
+      .from(matchPlayer)
+      .innerJoin(user, eq(matchPlayer.playerId, user.id))
+      .where(eq(matchPlayer.matchId, foundMatch.id));
 
     // Derive team membership from the match's homeTeam / awayTeam ID arrays.
     // Players not yet assigned to either team are considered "unassigned" —

@@ -4,9 +4,41 @@ import TurfCard from "./TurfCard";
 interface Props {
   turfs: Turf[];
   searched: boolean;
+  loading?: boolean;
 }
 
-export default function TurfResultsGrid({ turfs, searched }: Props) {
+function TurfCardSkeleton() {
+  return (
+    <div className="bg-[#0d1117] border border-white/5 rounded-lg p-6 flex flex-col gap-4 animate-pulse">
+      <div className="flex items-start justify-between">
+        <div className="w-10 h-10 rounded-xl bg-white/5" />
+        <div className="w-16 h-6 rounded-lg bg-white/5" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="h-4 w-3/4 rounded bg-white/5" />
+        <div className="h-3 w-1/2 rounded bg-white/5" />
+      </div>
+      <div className="flex gap-1.5">
+        <div className="h-5 w-16 rounded-md bg-white/5" />
+        <div className="h-5 w-20 rounded-md bg-white/5" />
+        <div className="h-5 w-14 rounded-md bg-white/5" />
+      </div>
+      <div className="mt-auto h-3 rounded bg-white/5 self-center pt-3 border-t border-white/5 w-full" />
+    </div>
+  );
+}
+
+export default function TurfResultsGrid({ turfs, searched, loading }: Props) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <TurfCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (!searched) {
     return (
       <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-lg border border-white/5">

@@ -1,17 +1,17 @@
 import { db } from "@/lib/db/db";
-import { match, matchPlayers } from "@/lib/db/schema";
+import { match, matchPlayer } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { Player } from "@/types/types";
 
 export async function getPlayerStats(userId: string): Promise<Player["stats"]> {
   const participatedMatches = await db
     .select({
-      matchId: matchPlayers.matchId,
+      matchId: matchPlayer.matchId,
       completed: match.completed,
     })
-    .from(matchPlayers)
-    .innerJoin(match, eq(matchPlayers.matchId, match.id))
-    .where(eq(matchPlayers.playerId, userId));
+    .from(matchPlayer)
+    .innerJoin(match, eq(matchPlayer.matchId, match.id))
+    .where(eq(matchPlayer.playerId, userId));
 
   const matchesPlayed = participatedMatches.filter((m) => m.completed).length;
 

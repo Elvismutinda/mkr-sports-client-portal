@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db/db";
-import { match, matchPlayers, payments } from "@/lib/db/schema";
+import { match, matchPlayer, payment } from "@/lib/db/schema";
 import { stkPush } from "@/lib/mpesa";
 import { count, eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -23,12 +23,12 @@ export async function enlistForMatch(matchId: string) {
 
   const [{ value: playerCount }] = await db
     .select({ value: count() })
-    .from(matchPlayers)
-    .where(eq(matchPlayers.matchId, matchId));
+    .from(matchPlayer)
+    .where(eq(matchPlayer.matchId, matchId));
 
   if (playerCount >= foundMatch.maxPlayers) return { error: "Match is full" };
 
-  await db.insert(matchPlayers).values({
+  await db.insert(matchPlayer).values({
     matchId,
     playerId: userId,
     position: session.user.position,
@@ -42,11 +42,11 @@ export async function leaveMatch(matchId: string) {
   if (!session?.user?.id) throw new Error("You must be logged in to leave a match");
 
   await db
-    .delete(matchPlayers)
+    .delete(matchPlayer)
     .where(
       and(
-        eq(matchPlayers.matchId, matchId),
-        eq(matchPlayers.playerId, session.user.id)
+        eq(matchPlayer.matchId, matchId),
+        eq(matchPlayer.playerId, session.user.id)
       )
     );
 
@@ -68,23 +68,23 @@ export async function startMatchPayment(matchId: string, phone: string) {
   if (!foundMatch) throw new Error("Match not found");
   if (foundMatch.completed) throw new Error("Match already completed");
 
-  // 2. Slot check against matchPlayers (source of truth)
+  // 2. Slot check against matchPlayer (source of truth)
   const [{ value: playerCount }] = await db
     .select({ value: count() })
-    .from(matchPlayers)
-    .where(eq(matchPlayers.matchId, matchId));
+    .from(matchPlayer)
+    .where(eq(matchPlayer.matchId, matchId));
 
   if (playerCount >= foundMatch.maxPlayers) throw new Error("Match is full");
 
   // 3. Check for an existing pending payment (user retrying after dismissing STK prompt)
   const [existingPending] = await db
     .select()
-    .from(payments)
+    .from(payment)
     .where(
       and(
-        eq(payments.userId, userId),
-        eq(payments.matchId, matchId),
-        eq(payments.status, "pending")
+        eq(payment.userId, userId),
+        eq(payment.matchId, matchId),
+        eq(payment.status, "pending")
       )
     );
 
@@ -100,12 +100,12 @@ export async function startMatchPayment(matchId: string, phone: string) {
   if (existingPending) {
     // Reuse the existing record, just refresh the checkoutRequestId
     await db
-      .update(payments)
+      .update(payment)
       .set({ checkoutRequestId: stk.CheckoutRequestID })
-      .where(eq(payments.id, existingPending.id));
+      .where(eq(payment.id, existingPending.id));
   } else {
     // Insert payment with checkoutRequestId in one atomic step
-    await db.insert(payments).values({
+    await db.insert(payment).values({
       userId,
       matchId,
       phone,

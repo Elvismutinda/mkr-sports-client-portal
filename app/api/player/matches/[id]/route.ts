@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db/db";
-import { match, matchPlayers, user } from "@/lib/db/schema";
+import { match, matchPlayer, user } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -20,10 +20,10 @@ export async function GET(_req: Request, { params }: RouteProps) {
 
     // Verify the user is actually a participant of this match
     const participation = await db
-      .select({ matchId: matchPlayers.matchId })
-      .from(matchPlayers)
+      .select({ matchId: matchPlayer.matchId })
+      .from(matchPlayer)
       .where(
-        and(eq(matchPlayers.matchId, id), eq(matchPlayers.playerId, userId)),
+        and(eq(matchPlayer.matchId, id), eq(matchPlayer.playerId, userId)),
       )
       .limit(1);
 
@@ -48,11 +48,11 @@ export async function GET(_req: Request, { params }: RouteProps) {
         id: user.id,
         name: user.name,
         avatarUrl: user.avatarUrl,
-        position: matchPlayers.position,
+        position: matchPlayer.position,
       })
-      .from(matchPlayers)
-      .innerJoin(user, eq(matchPlayers.playerId, user.id))
-      .where(eq(matchPlayers.matchId, id));
+      .from(matchPlayer)
+      .innerJoin(user, eq(matchPlayer.playerId, user.id))
+      .where(eq(matchPlayer.matchId, id));
 
     return NextResponse.json({ match: matchData, players });
   } catch (error) {

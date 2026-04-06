@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db/db";
-import { match, matchPlayers } from "@/lib/db/schema";
+import { match, matchPlayer } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -16,15 +16,15 @@ export async function GET() {
     // Get all matches the player participated in
     const participatedMatches = await db
       .select({
-        matchId: matchPlayers.matchId,
+        matchId: matchPlayer.matchId,
         completed: match.completed,
         score: match.score,
         homeTeam: match.homeTeam,
         awayTeam: match.awayTeam,
       })
-      .from(matchPlayers)
-      .innerJoin(match, eq(matchPlayers.matchId, match.id))
-      .where(eq(matchPlayers.playerId, userId));
+      .from(matchPlayer)
+      .innerJoin(match, eq(matchPlayer.matchId, match.id))
+      .where(eq(matchPlayer.playerId, userId));
 
     const matchesPlayed = participatedMatches.filter((m) => m.completed).length;
 

@@ -1,89 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SectorReconSearch from "@/app/(landing)/turfs/(components)/SectorReconSearch";
 import TurfResultsGrid from "@/app/(landing)/turfs/(components)/TurfResultsGrid";
 import { Turf } from "@/types/types";
 
-const ALL_TURFS: Turf[] = [
-  {
-    id: "1",
-    name: "Wembley Elite Hub",
-    area: "Westlands",
-    city: "Nairobi",
-    rating: 4.9,
-    amenities: ["Floodlights", "Changing Rooms", "Cafe"],
-    mapsQuery: "Wembley Elite Hub Westlands Nairobi",
-  },
-  {
-    id: "2",
-    name: "Central Sector 7",
-    area: "Kilimani",
-    city: "Nairobi",
-    rating: 4.7,
-    amenities: ["Parking", "Water Stations", "Tactical Boards"],
-    mapsQuery: "Central Sector 7 Kilimani Nairobi",
-  },
-  {
-    id: "3",
-    name: "Dome Complex",
-    area: "Langata",
-    city: "Nairobi",
-    rating: 4.8,
-    amenities: ["Indoor Pitch", "Gym", "Recovery Zone"],
-    mapsQuery: "Dome Complex Langata Nairobi",
-  },
-  {
-    id: "4",
-    name: "Eastlands Arena",
-    area: "Eastlands",
-    city: "Nairobi",
-    rating: 4.5,
-    amenities: ["Floodlights", "Parking", "Cafe"],
-    mapsQuery: "Eastlands Arena Nairobi",
-  },
-  {
-    id: "5",
-    name: "Karen Sports Ground",
-    area: "Karen",
-    city: "Nairobi",
-    rating: 4.6,
-    amenities: ["Changing Rooms", "Gym", "Water Stations"],
-    mapsQuery: "Karen Sports Ground Nairobi",
-  },
-  {
-    id: "6",
-    name: "Kasarani Tactical Hub",
-    area: "Kasarani",
-    city: "Nairobi",
-    rating: 4.4,
-    amenities: ["Indoor Pitch", "Tactical Boards", "Recovery Zone"],
-    mapsQuery: "Kasarani Tactical Hub Nairobi",
-  },
-];
-
 export default function TurfsPage() {
   const [query, setQuery] = useState("");
   const [searched, setSearched] = useState(false);
+  const [allTurfs, setAllTurfs] = useState<Turf[]>([]);
   const [results, setResults] = useState<Turf[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleScan = () => {
+  useEffect(() => {
+    const fetchTurfs = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/turfs");
+        if (!res.ok) throw new Error("Failed to load turfs");
+        const json = await res.json();
+        setAllTurfs(json.data ?? []);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTurfs();
+  }, []);
+
+  const handleScan = useCallback(() => {
     setSearched(true);
     const q = query.trim().toLowerCase();
     if (!q) {
-      setResults(ALL_TURFS);
+      setResults(allTurfs);
       return;
     }
     setResults(
-      ALL_TURFS.filter(
+      allTurfs.filter(
         (t) =>
           t.name.toLowerCase().includes(q) ||
-          t.area.toLowerCase().includes(q) ||
+          t.area?.toLowerCase().includes(q) ||
           t.city.toLowerCase().includes(q) ||
-          t.amenities.some((a) => a.toLowerCase().includes(q)),
+          t.amenities?.some((a: string) => a.toLowerCase().includes(q)),
       ),
     );
-  };
+  }, [query, allTurfs]);
 
   return (
     <div className="min-h-screen bg-mkr-navy text-slate-100 pt-28 pb-24 px-6">
@@ -92,18 +56,33 @@ export default function TurfsPage() {
           Available Turfs
         </h1>
         <p className="text-xs font-black tracking-widest text-slate-500 mb-10">
-          Real-time grounded search on Kenyan pitches and training
-          facilities.
+          Real-time grounded search on Kenyan pitches and training facilities.
         </p>
 
         <SectorReconSearch
           value={query}
           onChange={setQuery}
           onScan={handleScan}
+          loading={loading}
         />
 
         <div className="mt-8">
-          <TurfResultsGrid turfs={results} searched={searched} />
+          {error ? (
+            <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-lg border border-red-500/20">
+              <p className="text-sm font-black uppercase tracking-widest text-red-400">
+                Failed to load turfs
+              </p>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-600 mt-1">
+                {error}
+              </p>
+            </div>
+          ) : (
+            <TurfResultsGrid
+              turfs={results}
+              searched={searched}
+              loading={loading}
+            />
+          )}
         </div>
       </div>
     </div>

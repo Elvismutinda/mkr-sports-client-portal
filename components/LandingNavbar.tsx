@@ -6,15 +6,16 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { navLinks } from "@/config/nav";
+import { usePathname } from "next/navigation";
 
 export default function LandingNavbar() {
   const user = useCurrentUser();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 w-full bg-mkr-navy/90 backdrop-blur-md border-b border-white/5 z-40">
       <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-
         <div className="flex items-center gap-10">
           <div className="flex items-center shrink-0">
             <span className="text-2xl font-black text-white tracking-tighter">
@@ -33,15 +34,24 @@ export default function LandingNavbar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-7">
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-xs font-bold uppercase tracking-[0.15em] text-slate-400 hover:text-mkr-yellow transition-colors duration-200"
-              >
-                {label}
-              </Link>
-            ))}
+            {navLinks.map(({ href, label }) => {
+              const isActive = pathname === href;
+
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "text-xs font-bold uppercase tracking-[0.15em] transition-colors duration-200",
+                    isActive
+                      ? "text-mkr-yellow"
+                      : "text-slate-400 hover:text-mkr-yellow",
+                  )}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -96,16 +106,25 @@ export default function LandingNavbar() {
         )}
       >
         <div className="bg-mkr-navy border-t border-white/5 px-6 pt-6 pb-8 flex flex-col gap-6">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-              className="text-md font-bold uppercase tracking-tight text-slate-200 hover:text-mkr-yellow transition-colors"
-            >
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label }) => {
+            const isActive = pathname === href;
+
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  "text-md font-bold uppercase tracking-tight transition-colors",
+                  isActive
+                    ? "text-mkr-yellow"
+                    : "text-slate-200 hover:text-mkr-yellow",
+                )}
+              >
+                {label}
+              </Link>
+            );
+          })}
 
           <div className="border-t border-white/10 pt-6">
             {user ? (

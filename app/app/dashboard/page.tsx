@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/db";
-import { match, matchPlayers } from "@/lib/db/schema";
+import { match, matchPlayer } from "@/lib/db/schema";
 import { eq, gte, desc, and } from "drizzle-orm";
 import { getPlayerStats } from "@/data/stats";
 import { Position } from "@/types/types";
@@ -39,10 +39,10 @@ export default async function DashboardPage() {
       isPublic: match.isPublic,
     })
     .from(match)
-    .innerJoin(matchPlayers, eq(matchPlayers.matchId, match.id))
+    .innerJoin(matchPlayer, eq(matchPlayer.matchId, match.id))
     .where(
       and(
-        eq(matchPlayers.playerId, userId),
+        eq(matchPlayer.playerId, userId),
         gte(match.date, now),
         eq(match.completed, false)
       )
@@ -64,10 +64,10 @@ export default async function DashboardPage() {
       matchReport: match.matchReport,
     })
     .from(match)
-    .innerJoin(matchPlayers, eq(matchPlayers.matchId, match.id))
+    .innerJoin(matchPlayer, eq(matchPlayer.matchId, match.id))
     .where(
       and(
-        eq(matchPlayers.playerId, userId),
+        eq(matchPlayer.playerId, userId),
         eq(match.completed, true)
       )
     )

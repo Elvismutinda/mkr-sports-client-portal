@@ -1,5 +1,5 @@
 import { db } from "@/lib/db/db";
-import { match, matchPlayers, user } from "@/lib/db/schema";
+import { match, matchPlayer, user } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Fixture, FixtureDetail } from "@/types/types";
 
@@ -18,11 +18,11 @@ export async function getMyFixtures(userId: string): Promise<Fixture[]> {
       score: match.score,
       matchReport: match.matchReport,
       isPublic: match.isPublic,
-      playerPosition: matchPlayers.position,
+      playerPosition: matchPlayer.position,
     })
-    .from(matchPlayers)
-    .innerJoin(match, eq(matchPlayers.matchId, match.id))
-    .where(eq(matchPlayers.playerId, userId))
+    .from(matchPlayer)
+    .innerJoin(match, eq(matchPlayer.matchId, match.id))
+    .where(eq(matchPlayer.playerId, userId))
     .orderBy(match.date);
 
   return rows.map((r) => ({
@@ -38,10 +38,10 @@ export async function getFixtureById(
 ): Promise<FixtureDetail | null> {
   // Verify the user is a participant
   const participation = await db
-    .select({ matchId: matchPlayers.matchId })
-    .from(matchPlayers)
+    .select({ matchId: matchPlayer.matchId })
+    .from(matchPlayer)
     .where(
-      and(eq(matchPlayers.matchId, matchId), eq(matchPlayers.playerId, userId))
+      and(eq(matchPlayer.matchId, matchId), eq(matchPlayer.playerId, userId))
     )
     .limit(1);
  
@@ -60,11 +60,11 @@ export async function getFixtureById(
       id: user.id,
       name: user.name,
       avatarUrl: user.avatarUrl,
-      position: matchPlayers.position,
+      position: matchPlayer.position,
     })
-    .from(matchPlayers)
-    .innerJoin(user, eq(matchPlayers.playerId, user.id))
-    .where(eq(matchPlayers.matchId, matchId));
+    .from(matchPlayer)
+    .innerJoin(user, eq(matchPlayer.playerId, user.id))
+    .where(eq(matchPlayer.matchId, matchId));
  
   const fixture: Fixture = {
     ...matchData,
