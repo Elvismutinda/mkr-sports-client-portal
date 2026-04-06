@@ -7,7 +7,7 @@ interface Props {
 
 export default function TeamSearchBar({ value, onChange }: Props) {
   return (
-    <div className="flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-2xl px-5 py-3.5 max-w-lg">
+    <div className="flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-lg px-5 py-3.5 max-w-lg">
       <svg
         width="14"
         height="14"

@@ -9,7 +9,7 @@ interface Props {
 export default function TurfResultsGrid({ turfs, searched }: Props) {
   if (!searched) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-[2rem] border border-white/5">
+      <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-lg border border-white/5">
         <svg
           width="48"
           height="48"
@@ -23,10 +23,10 @@ export default function TurfResultsGrid({ turfs, searched }: Props) {
           <line x1="2" y1="12" x2="22" y2="12" />
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
-        <p className="text-sm font-black tracking-widest text-slate-600">
+        <p className="text-sm font-black uppercase tracking-widest text-slate-600">
           Location Search Required
         </p>
-        <p className="text-xs font-black tracking-widest text-slate-700 mt-1">
+        <p className="text-xs font-black uppercase tracking-widest text-slate-700 mt-1">
           Initiate search above to locate available turfs.
         </p>
       </div>
@@ -35,7 +35,7 @@ export default function TurfResultsGrid({ turfs, searched }: Props) {
 
   if (turfs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-[2rem] border border-white/5">
+      <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-lg border border-white/5">
         <p className="text-sm font-black uppercase tracking-widest text-slate-600">
           No turfs found in this location.
         </p>

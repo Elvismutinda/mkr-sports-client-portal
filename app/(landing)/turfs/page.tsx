@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import SectorReconSearch from "@/components/turfs/SectorReconSearch";
-import TurfResultsGrid from "@/components/turfs/TurfResultsGrid";
+import SectorReconSearch from "@/app/(landing)/turfs/(components)/SectorReconSearch";
+import TurfResultsGrid from "@/app/(landing)/turfs/(components)/TurfResultsGrid";
 import { Turf } from "@/types/types";
 
 const ALL_TURFS: Turf[] = [
@@ -87,12 +87,12 @@ export default function TurfsPage() {
 
   return (
     <div className="min-h-screen bg-mkr-navy text-slate-100 pt-28 pb-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-black uppercase tracking-tighter text-white">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-black uppercase tracking-tighter text-white">
           Available Turfs
         </h1>
         <p className="text-xs font-black tracking-widest text-slate-500 mb-10">
-          Real-time grounded intelligence on Kenyan pitches and training
+          Real-time grounded search on Kenyan pitches and training
           facilities.
         </p>
 

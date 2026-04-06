@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import TeamSearchBar from "@/components/teams/TeamSearchBar";
-import TeamGrid from "@/components/teams/TeamGrid";
+import TeamSearchBar from "@/app/(landing)/teams/(components)/TeamSearchBar";
+import TeamGrid from "@/app/(landing)/teams/(components)/TeamGrid";
 import { Team } from "@/types/types";
 
 const ALL_TEAMS: Team[] = [
@@ -53,8 +53,8 @@ export default function TeamsPage() {
 
   return (
     <div className="min-h-screen bg-mkr-navy text-slate-100 pt-28 pb-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-black uppercase tracking-tighter text-white mb-2">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-black uppercase tracking-tighter text-white mb-2">
           Registered Teams
         </h1>
         <p className="text-xs font-black tracking-widest text-slate-500 mb-10">

@@ -1,0 +1,147 @@
+import { notFound } from "next/navigation";
+import { auth } from "@/auth";
+
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import TournamentHero from "../(components)/TournamentHero";
+import StandingsTable from "../(components)/StandingsTable";
+import ParticipantsList from "../(components)/ParticipantsList";
+import RegisterForTournament from "../(components)/RegisterForTournament";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function TournamentDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const session = await auth();
+  const currentUser = session?.user ?? null;
+
+  const res = await fetch(`${BASE_URL}/api/tournaments/${id}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) notFound();
+
+  const tournament = await res.json();
+
+  const isRegistered = tournament.participants?.some(
+    (p: { id: string }) => p.id === currentUser?.id
+  );
+
+  return (
+    <div className="min-h-screen bg-mkr-navy text-slate-100 pt-28 pb-24 px-6">
+      <div className="max-w-5xl mx-auto">
+        <Link
+          href="/tournaments"
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "mb-8 -ml-3 opacity-60 hover:opacity-100 tracking-normal!"
+          )}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            className="mr-2"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          Back to Tournaments
+        </Link>
+
+        <div className="flex flex-col lg:flex-row gap-10">
+          <div className="flex-1 space-y-10">
+            <TournamentHero tournament={tournament} />
+
+            {tournament.standings && tournament.standings.length > 0 && (
+              <StandingsTable standings={tournament.standings} />
+            )}
+
+            {tournament.participants && tournament.participants.length > 0 && (
+              <ParticipantsList participants={tournament.participants} />
+            )}
+          </div>
+
+          <div className="w-full lg:w-80 shrink-0">
+            <div className="sticky top-28 bg-[#0d1117] border border-white/10 rounded-[2rem] p-7 space-y-6">
+              <div className="border-b border-white/5 pb-5">
+                <h3 className="text-lg font-black text-white uppercase italic tracking-tighter mb-1">
+                  {isRegistered ? "You're Enlisted" : "Join Campaign"}
+                </h3>
+                <p className="text-xs font-black uppercase italic tracking-widest text-mkr-yellow">
+                  KSH {tournament.prizePool?.toLocaleString()} Prize Pool
+                </p>
+              </div>
+
+              {tournament.status === "COMPLETED" ? (
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center opacity-50">
+                  <div className="text-slate-500 font-black uppercase text-[10px] tracking-widest mb-1">
+                    Status: Concluded
+                  </div>
+                  <p className="text-xs text-slate-400 font-bold">
+                    Campaign has ended.
+                  </p>
+                </div>
+              ) : isRegistered ? (
+                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 text-center">
+                  <div className="text-emerald-400 font-black uppercase text-[10px] tracking-widest mb-2">
+                    Enlistment Confirmed
+                  </div>
+                  <p className="text-xs text-slate-400 font-bold leading-relaxed">
+                    You are registered for this tournament.
+                  </p>
+                </div>
+              ) : !currentUser ? (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-500 font-bold text-center">
+                    Sign in to register for this tournament.
+                  </p>
+                  <Link
+                    href="/login"
+                    className={cn(
+                      buttonVariants({ variant: "primary" }),
+                      "w-full h-11 text-xs tracking-widest uppercase font-black"
+                    )}
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              ) : (
+                <RegisterForTournament
+                  tournamentId={tournament.id}
+                  userId={currentUser.id!}
+                />
+              )}
+
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/5">
+                <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
+                  <div className="text-lg font-black text-white italic leading-none mb-1">
+                    {tournament.participants?.length ?? 0}
+                  </div>
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                    Enlisted
+                  </div>
+                </div>
+                <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
+                  <div className="text-lg font-black text-mkr-yellow italic leading-none mb-1">
+                    {tournament.standings?.length ?? 0}
+                  </div>
+                  <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                    Teams
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

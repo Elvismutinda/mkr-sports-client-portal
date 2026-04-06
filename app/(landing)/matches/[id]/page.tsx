@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import LeaveMatchButton from "@/components/match/LeaveMatchButton";
-import RegisterMatchForm from "@/components/match/RegisterMatchForm";
-import RoasterPreview from "@/components/match/RoasterPreview";
+import LeaveMatchButton from "@/app/(landing)/matches/(components)/LeaveMatchButton";
+import RegisterMatchForm from "@/app/(landing)/matches/(components)/RegisterMatchForm";
+import RoasterPreview from "@/app/(landing)/matches/(components)/RoasterPreview";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Position } from "@/types/types";
@@ -76,7 +76,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
           <Link
             href="/"
             className={cn(
-              buttonVariants({ variant: "ghost" }),
+              buttonVariants({ variant: "ghost", size: "sm" }),
               "mb-8 p-2 tracking-normal! opacity-60 hover:opacity-100",
             )}
           >
@@ -87,11 +87,10 @@ export default async function MatchDetailsPage({ params }: PageProps) {
               fill="none"
               stroke="currentColor"
               strokeWidth="3"
-              className="mr-2"
             >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            Back to list
+            Home
           </Link>
         </div>
 
@@ -108,7 +107,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
         <div className="flex flex-col lg:flex-row gap-12 relative">
           <div className="flex-1 space-y-16">
             <section className="animate-fade-in">
-              {/* Section header with legend */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4 flex-1">
                   <h2 className="text-2xl font-black uppercase tracking-tight text-white">
@@ -138,7 +136,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 className="relative w-full bg-[#1a2a1a] rounded-[2rem] border-2 border-white/10 overflow-hidden shadow-2xl"
                 style={{ aspectRatio: "4/3" }}
               >
-                {/* Grass stripes */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
@@ -183,7 +180,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "18%",
                   }}
                 />
-                {/* Top 6-yard box */}
                 <div
                   className="absolute border border-white/15 border-t-0 pointer-events-none"
                   style={{

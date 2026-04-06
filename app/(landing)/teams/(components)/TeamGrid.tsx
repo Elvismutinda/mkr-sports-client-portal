@@ -8,7 +8,7 @@ interface Props {
 export default function TeamGrid({ teams }: Props) {
   if (teams.length === 0) {
     return (
-      <div className="py-32 text-center bg-[#0d1117]/60 rounded-[2rem] border border-white/5">
+      <div className="py-32 text-center bg-[#0d1117]/60 rounded-lg border border-white/5">
         <p className="text-sm font-black uppercase tracking-widest text-slate-600">
           No teams found.
         </p>

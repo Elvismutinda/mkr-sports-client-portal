@@ -6,7 +6,7 @@ interface Props {
 
 export default function TurfCard({ turf }: Props) {
   return (
-    <div className="bg-[#0d1117] border border-white/5 rounded-[1.5rem] p-6 hover:border-mkr-yellow/30 transition-all duration-300 flex flex-col gap-4">
+    <div className="bg-[#0d1117] border border-white/5 rounded-lg p-6 hover:border-mkr-yellow/30 transition-all duration-300 flex flex-col gap-4">
       <div className="flex items-start justify-between">
         <div className="w-10 h-10 rounded-xl bg-mkr-navy border border-white/10 flex items-center justify-center shrink-0">
           <svg

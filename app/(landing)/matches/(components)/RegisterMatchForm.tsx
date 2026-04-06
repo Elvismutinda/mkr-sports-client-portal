@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useTransition } from "react";
 
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,15 +15,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../../../../components/ui/form";
 import { toast } from "sonner";
 import { startMatchPayment } from "@/app/(landing)/matches/actions";
 import {
   MatchRegisterRequest,
   MatchRegisterSchema,
 } from "@/lib/validations/match";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
+import { Checkbox } from "../../../../components/ui/checkbox";
+import { Label } from "../../../../components/ui/label";
 import { Match } from "@/types/types";
 
 interface Props {

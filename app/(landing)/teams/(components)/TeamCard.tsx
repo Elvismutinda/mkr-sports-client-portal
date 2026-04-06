@@ -7,7 +7,7 @@ interface Props {
 
 export default function TeamCard({ team }: Props) {
   return (
-    <div className="relative bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7 hover:border-mkr-yellow/30 transition-all duration-300 flex flex-col gap-5 overflow-hidden">
+    <div className="relative bg-[#0d1117] border border-white/5 rounded-lg p-7 hover:border-mkr-yellow/30 transition-all duration-300 flex flex-col gap-5 overflow-hidden">
       <div className="absolute top-4 right-5 opacity-[0.06] pointer-events-none select-none">
         <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor" className="text-white">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />

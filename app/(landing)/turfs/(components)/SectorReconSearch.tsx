@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 interface Props {
   value: string;
   onChange: (v: string) => void;
@@ -9,7 +11,7 @@ interface Props {
 export default function SectorReconSearch({ value, onChange, onScan }: Props) {
   return (
     <div className="flex gap-3">
-      <div className="flex-1 flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-2xl px-5 py-3.5">
+      <div className="flex-1 flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-lg px-5 py-3.5">
         <svg
           width="14"
           height="14"
@@ -31,12 +33,13 @@ export default function SectorReconSearch({ value, onChange, onScan }: Props) {
           className="flex-1 bg-transparent text-sm font-black tracking-widest text-white placeholder:text-slate-600 outline-none"
         />
       </div>
-      <button
+      <Button
         onClick={onScan}
-        className="bg-mkr-yellow text-mkr-navy font-black uppercase text-sm tracking-widest px-8 rounded-2xl hover:bg-yellow-300 transition-colors"
+        variant={"primary"}
+        size={"md"}
       >
-        Scan Location
-      </button>
+        Search
+      </Button>
     </div>
   );
 }
