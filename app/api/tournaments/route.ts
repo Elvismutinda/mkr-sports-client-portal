@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q")?.trim() ?? "";
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
-    const limit = Math.min(20, Math.max(1, parseInt(searchParams.get("limit") ?? "8", 10)));
+    const limit = Math.min(20, Math.max(1, parseInt(searchParams.get("limit") ?? "10", 10)));
     const offset = (page - 1) * limit;
 
     const publicClause = eq(tournament.isPublic, true);
