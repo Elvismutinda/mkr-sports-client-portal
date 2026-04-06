@@ -47,7 +47,6 @@ export default function TournamentsSection({ tournaments }: Props) {
             key={tournament.id}
             className="relative bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7 hover:border-mkr-yellow/30 transition-all duration-300 overflow-hidden flex flex-col gap-5"
           >
-            {/* Watermark */}
             <div className="absolute bottom-4 right-6 opacity-[0.04] pointer-events-none select-none">
               <svg
                 width="80"
@@ -88,7 +87,6 @@ export default function TournamentsSection({ tournaments }: Props) {
               )}
             </div>
 
-            {/* Standings preview */}
             {tournament.standings && tournament.standings.length > 0 ? (
               <div className="space-y-2.5">
                 {tournament.standings.slice(0, 3).map((s) => (
@@ -126,7 +124,6 @@ export default function TournamentsSection({ tournaments }: Props) {
               </div>
             )}
 
-            {/* Participant avatars */}
             {tournament.participants && tournament.participants.length > 0 && (
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">

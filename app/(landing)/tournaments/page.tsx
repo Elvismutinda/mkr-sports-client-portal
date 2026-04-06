@@ -88,7 +88,6 @@ export default function TournamentsPage() {
           top!
         </p>
 
-        {/* Search */}
         <div className="flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-lg px-5 py-3.5 max-w-lg mb-10">
           <svg
             width="14" height="14" viewBox="0 0 24 24"
