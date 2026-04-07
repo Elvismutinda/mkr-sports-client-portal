@@ -6,7 +6,7 @@ import { Tournament } from "@/types/types";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 async function getTournaments(): Promise<Tournament[]> {
-  const res = await fetch(`${BASE_URL}/api/tournaments`, { cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/api/player/tournaments`, { cache: "no-store" });
   if (!res.ok) {
     console.error("Failed to fetch tournaments:", res.statusText);
     return [];
