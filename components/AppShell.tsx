@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import AppSideBar from "@/components/AppSideBar";
 import AppNavBar from "@/components/AppNavBar";
-import { ActionFab } from "./ActionFab";
+// import { ActionFab } from "./ActionFab";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(true);
@@ -33,7 +33,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      <ActionFab />
+      {/* <ActionFab /> */}
     </div>
   );
 }

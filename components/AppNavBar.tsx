@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import Link from "next/link";
+import { useNotifications } from "@/hooks/use-notifications";
 
 interface AppNavBarProps {
   toggleMenu: () => void;
@@ -28,7 +29,8 @@ export default function AppNavBar({ toggleMenu }: AppNavBarProps) {
   const user = useCurrentUser();
   const [isPopoverOpen, setPopoverOpen] = useState(false);
 
-  const notificationCount = 0;
+  const { notifications, unreadCount, markAsRead, markAllAsRead, loading } =
+    useNotifications();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
@@ -56,20 +58,64 @@ export default function AppNavBar({ toggleMenu }: AppNavBarProps) {
           <PopoverTrigger asChild>
             <button className="relative cursor-pointer">
               <Bell className="h-5 w-5 text-gray-400 hover:text-mkr-yellow transition-colors" />
-              {notificationCount > 0 && (
+              {unreadCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-mkr-yellow text-mkr-dark text-[10px] font-bold px-1">
-                  {notificationCount > 99 ? "99+" : notificationCount}
+                  {unreadCount > 99 ? "99+" : unreadCount}
                 </span>
               )}
             </button>
           </PopoverTrigger>
           <PopoverContent
             align="end"
-            className="w-80 bg-mkr-navy border-white/10 text-white"
+            className="w-80 bg-mkr-navy border-white/10 text-white p-0"
           >
-            <p className="text-sm text-gray-400 text-center py-4">
-              No new notifications
-            </p>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+              <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                Notifications
+              </p>
+
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-[10px] font-black uppercase text-mkr-yellow hover:underline"
+                >
+                  Mark all as read
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-80 overflow-y-auto">
+              {loading ? (
+                <p className="text-center text-xs text-slate-500 py-6">
+                  Loading...
+                </p>
+              ) : notifications.length === 0 ? (
+                <p className="text-center text-xs text-slate-500 py-6">
+                  No notifications
+                </p>
+              ) : (
+                notifications.map((n) => (
+                  <div
+                    key={n.id}
+                    onClick={() => markAsRead(n.id)}
+                    className={`px-4 py-3 border-b border-white/5 cursor-pointer transition-colors ${
+                      !n.isRead
+                        ? "bg-mkr-yellow/10 hover:bg-mkr-yellow/20"
+                        : "hover:bg-white/5"
+                    }`}
+                  >
+                    <p className="text-[11px] font-black text-white">
+                      {n.title}
+                    </p>
+                    {n.body && (
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        {n.body}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           </PopoverContent>
         </Popover>
 

@@ -15,6 +15,13 @@
       "when": 1775478314595,
       "tag": "0001_polite_hannibal_king",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775569052357,
+      "tag": "0002_shiny_proudstar",
+      "breakpoints": true
     }
   ]
 }

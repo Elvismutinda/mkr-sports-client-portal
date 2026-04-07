@@ -1,6 +1,6 @@
 "use client";
 
-import { BoltIcon } from "./tournaments/Icons";
+import { Zap } from "lucide-react";
 
 export function ActionFab() {
   return (
@@ -11,7 +11,7 @@ export function ActionFab() {
       className="fixed bottom-7 right-7 w-14 h-14 rounded-full bg-yellow-400 text-black flex items-center justify-center shadow-2xl shadow-yellow-400/30 hover:scale-110 hover:brightness-110 transition-all duration-200"
       aria-label="Quick action"
     >
-      <BoltIcon />
+      <Zap className="w-6 h-6" />
     </button>
   );
 }

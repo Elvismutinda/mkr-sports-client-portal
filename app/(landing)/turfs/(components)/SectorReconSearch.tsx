@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface Props {
   value: string;
@@ -18,18 +19,7 @@ export default function SectorReconSearch({
   return (
     <div className="flex gap-3">
       <div className="flex-1 flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-lg px-5 py-3.5">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          className="text-slate-500 shrink-0"
-        >
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
+        <Search className="text-slate-500 shrink-0" />
         <input
           type="text"
           value={value}

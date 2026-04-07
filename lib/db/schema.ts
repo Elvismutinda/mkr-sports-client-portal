@@ -236,6 +236,12 @@ export const team = pgTable("teams", {
   type: varchar("type", { length: 64 }),                    // e.g. "Club", "National", "5-a-side"
   bio: text("bio"),
   captainId: uuid("captain_id").references(() => user.id, { onDelete: "set null" }),
+  homePitchId: uuid("home_pitch_id").references(() => turf.id, {
+    onDelete: "set null",
+  }),
+  trainingPitchId: uuid("training_pitch_id").references(() => turf.id, {
+    onDelete: "set null",
+  }),
   stats: jsonb("stats").$type<{
     matchesPlayed: number;
     wins: number;

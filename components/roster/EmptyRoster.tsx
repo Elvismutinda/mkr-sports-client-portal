@@ -1,29 +1,29 @@
-import { EmptyData } from "@/components/EmptyData";
+import { UserPlus, Users } from "lucide-react";
+import { Button } from "../ui/button";
 
-const icon = (
-  <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="1.5" />
-    <path
-      d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+interface Props {
+  onInvite?: () => void;
+}
 
-export function EmptyRoster() {
+export function EmptyRoster({ onInvite }: Props) {
   return (
-    <EmptyData
-      icon={icon}
-      title="No Team Members Enlisted"
-      subtitle="Recruit players to populate the roster."
-    />
+    <div className="flex flex-col items-center justify-center py-32 bg-[#0d1117]/60 rounded-[1.75rem] border-2 border-dashed border-white/10">
+      <Users className="w-12 h-12 text-slate-600 mb-4" />
+      <p className="text-sm font-black uppercase tracking-widest text-slate-600">
+        No Players Yet
+      </p>
+      <p className="text-xs font-black uppercase tracking-widest text-slate-700 mt-1 mb-6">
+        Add your first player to build your roster.
+      </p>
+      {onInvite && (
+        <Button
+          onClick={onInvite}
+          variant="primary"
+        >
+          <UserPlus className="w-4 h-4" />
+          Add First Player
+        </Button>
+      )}
+    </div>
   );
 }

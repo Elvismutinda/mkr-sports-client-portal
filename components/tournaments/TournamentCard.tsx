@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Tournament } from "@/types/types";
 import { statusConfig } from "@/config/status";
-import { PinIcon, TrophyIcon, CalendarIcon } from "./Icons";
 import { Button } from "../ui/button";
+import { Trophy, MapPin, Calendar } from "lucide-react";
 
 export function TournamentCard({ tournament }: { tournament: Tournament }) {
   const [hovered, setHovered] = useState(false);
@@ -44,7 +44,7 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
           {tournament.name}
         </h2>
         <div className="flex items-center gap-1 mt-2 text-slate-500 text-[11px] font-semibold tracking-[0.14em] uppercase">
-          <PinIcon />
+          <MapPin />
           {tournament.location}
         </div>
       </div>
@@ -60,7 +60,7 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="flex items-center gap-3 bg-black/30 rounded-xl px-4 py-3">
           <span className={isCompleted ? "text-slate-500" : "text-yellow-400"}>
-            <TrophyIcon />
+            <Trophy />
           </span>
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-500">
@@ -77,7 +77,7 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
         </div>
         <div className="flex items-center gap-3 bg-black/30 rounded-xl px-4 py-3">
           <span className={isCompleted ? "text-slate-500" : "text-yellow-400"}>
-            <CalendarIcon />
+            <Calendar />
           </span>
           <div>
             <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-500">

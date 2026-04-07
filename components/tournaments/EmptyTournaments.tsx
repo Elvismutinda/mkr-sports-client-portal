@@ -1,15 +1,8 @@
 import { EmptyData } from "@/components/EmptyData";
+import { Trophy } from "lucide-react";
 
 const icon = (
-  <svg width="52" height="52" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M8 21h8M12 17v4M7 4H4a1 1 0 0 0-1 1v2a4 4 0 0 0 4 4h1M17 4h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-1M7 4h10v7a5 5 0 0 1-10 0V4Z"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+  <Trophy className="w-12 h-12 text-slate-500" />
 );
 
 export function EmptyTournaments() {

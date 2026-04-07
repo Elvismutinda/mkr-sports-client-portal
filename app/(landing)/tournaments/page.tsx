@@ -12,6 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Search } from "lucide-react";
 
 export default function TournamentsPage() {
   const [query, setQuery] = useState("");
@@ -89,14 +90,7 @@ export default function TournamentsPage() {
         </p>
 
         <div className="flex items-center gap-3 bg-[#0d1117] border border-white/10 rounded-lg px-5 py-3.5 max-w-lg mb-10">
-          <svg
-            width="14" height="14" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" strokeWidth="2.5"
-            className="text-slate-500 shrink-0"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
+          <Search className="text-slate-500 shrink-0" />
           <input
             type="text"
             value={query}

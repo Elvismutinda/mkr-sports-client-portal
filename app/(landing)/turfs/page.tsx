@@ -83,7 +83,7 @@ export default function TurfsPage() {
   return (
     <div className="min-h-screen bg-mkr-navy text-slate-100 pt-28 pb-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-black uppercase tracking-tighter text-white">
+        <h1 className="text-3xl font-black uppercase tracking-tighter text-white mb-2">
           Available Turfs
         </h1>
         <p className="text-xs font-black tracking-widest text-slate-500 mb-10">
