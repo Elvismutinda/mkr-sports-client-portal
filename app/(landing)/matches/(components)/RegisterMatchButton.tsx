@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { enlistForMatch } from "@/app/(landing)/matches/actions";
+// import { enlistForMatch } from "@/app/(landing)/matches/actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -15,7 +15,7 @@ export default function RegisterMatchButton({ matchId }: Props) {
   const handleEnlist = () => {
     startTransition(async () => {
       try {
-        await enlistForMatch(matchId);
+        // await enlistForMatch(matchId);
         toast.success("Successfully enlisted for the match!");
       } catch (err) {
         const message =

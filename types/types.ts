@@ -125,6 +125,14 @@ export interface MatchPlayer {
   motm: boolean;
 }
 
+export interface MatchPlayerWithUser {
+  id: string;         // user id
+  name: string;
+  avatarUrl: string | null;
+  position: Position;
+  team: "home" | "away" | "unassigned";
+}
+
 export interface FixturePlayer {
   id: string;
   name: string;

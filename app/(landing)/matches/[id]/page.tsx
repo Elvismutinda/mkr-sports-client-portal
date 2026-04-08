@@ -4,7 +4,7 @@ import RegisterMatchForm from "@/app/(landing)/matches/(components)/RegisterMatc
 import RoasterPreview from "@/app/(landing)/matches/(components)/RoasterPreview";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Position } from "@/types/types";
+import { Position, MatchPlayerWithUser } from "@/types/types";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -14,14 +14,6 @@ interface PageProps {
   params: Promise<{
     id: string;
   }>;
-}
-
-interface MatchPlayer {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  position: Position;
-  team: "home" | "away" | "unassigned";
 }
 
 export default async function MatchDetailsPage({ params }: PageProps) {
@@ -52,17 +44,16 @@ export default async function MatchDetailsPage({ params }: PageProps) {
     pos: Position,
     team: "home" | "away" | "unassigned",
   ) =>
-    (match.players as MatchPlayer[]).filter(
+    (match.players as MatchPlayerWithUser[]).filter(
       (p) => p.position === pos && p.team === team,
     );
 
-  // Fallback: if no teams are assigned yet, render all players as a single squad
   const hasTeams =
-    (match.players as MatchPlayer[]).some((p) => p.team === "home") ||
-    (match.players as MatchPlayer[]).some((p) => p.team === "away");
+    (match.players as MatchPlayerWithUser[]).some((p) => p.team === "home") ||
+    (match.players as MatchPlayerWithUser[]).some((p) => p.team === "away");
 
   const playersByPosition = (pos: Position) =>
-    (match.players as MatchPlayer[]).filter((p) => p.position === pos);
+    (match.players as MatchPlayerWithUser[]).filter((p) => p.position === pos);
 
   const priceKES = new Intl.NumberFormat("en-KE", {
     minimumFractionDigits: 2,
@@ -136,6 +127,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 className="relative w-full bg-[#1a2a1a] rounded-[2rem] border-2 border-white/10 overflow-hidden shadow-2xl"
                 style={{ aspectRatio: "4/3" }}
               >
+                {/* Pitch stripe overlay */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
@@ -144,14 +136,17 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   }}
                 />
 
+                {/* Outer boundary */}
                 <div
                   className="absolute border border-white/20 pointer-events-none"
                   style={{ inset: "4%" }}
                 />
+                {/* Halfway line */}
                 <div
                   className="absolute left-[4%] right-[4%] border-t border-dashed border-white/20 pointer-events-none"
                   style={{ top: "50%" }}
                 />
+                {/* Centre circle */}
                 <div
                   className="absolute border border-white/20 rounded-full pointer-events-none"
                   style={{
@@ -162,6 +157,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     transform: "translate(-50%, -50%)",
                   }}
                 />
+                {/* Centre spot */}
                 <div
                   className="absolute w-1.5 h-1.5 rounded-full bg-white/25 pointer-events-none"
                   style={{
@@ -170,6 +166,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     transform: "translate(-50%, -50%)",
                   }}
                 />
+                {/* Top penalty area */}
                 <div
                   className="absolute border border-white/20 border-t-0 pointer-events-none"
                   style={{
@@ -180,6 +177,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "18%",
                   }}
                 />
+                {/* Top 6-yard box */}
                 <div
                   className="absolute border border-white/15 border-t-0 pointer-events-none"
                   style={{
@@ -190,6 +188,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "8%",
                   }}
                 />
+                {/* Bottom penalty area */}
                 <div
                   className="absolute border border-white/20 border-b-0 pointer-events-none"
                   style={{
@@ -200,6 +199,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "18%",
                   }}
                 />
+                {/* Bottom 6-yard box */}
                 <div
                   className="absolute border border-white/15 border-b-0 pointer-events-none"
                   style={{
@@ -214,6 +214,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 <div className="absolute inset-0">
                   {hasTeams ? (
                     <>
+                      {/* Away team — top half */}
                       {(
                         [
                           "Goalkeeper",
@@ -223,7 +224,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                         ] as Position[]
                       ).map((pos, rowIdx) => {
                         const players = playersByPositionAndTeam(pos, "away");
-                        // Rows distributed in top 46% of pitch (leaving gap before halfway line)
                         const rowTops = ["7%", "18%", "29%", "40%"];
                         if (players.length === 0) return null;
                         return players.map((p, colIdx) => {
@@ -245,7 +245,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                                   <span className="text-xs font-black text-red-400 uppercase">
                                     {p.name
                                       .split(" ")
-                                      .map((n: string) => n[0])
+                                      .map((n) => n[0])
                                       .join("")
                                       .slice(0, 2)}
                                   </span>
@@ -264,6 +264,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                         });
                       })}
 
+                      {/* Home team — bottom half */}
                       {(
                         [
                           "Goalkeeper",
@@ -273,7 +274,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                         ] as Position[]
                       ).map((pos, rowIdx) => {
                         const players = playersByPositionAndTeam(pos, "home");
-                        // Rows distributed in bottom 46% of pitch
                         const rowBottoms = ["7%", "18%", "29%", "40%"];
                         if (players.length === 0) return null;
                         return players.map((p, colIdx) => {
@@ -295,7 +295,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                                   <span className="text-xs font-black text-mkr-yellow uppercase">
                                     {p.name
                                       .split(" ")
-                                      .map((n: string) => n[0])
+                                      .map((n) => n[0])
                                       .join("")
                                       .slice(0, 2)}
                                   </span>
@@ -346,7 +346,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                                 <span className="text-xs font-black text-mkr-yellow uppercase">
                                   {p.name
                                     .split(" ")
-                                    .map((n: string) => n[0])
+                                    .map((n) => n[0])
                                     .join("")
                                     .slice(0, 2)}
                                 </span>
@@ -454,6 +454,7 @@ export default async function MatchDetailsPage({ params }: PageProps) {
             </section>
           </div>
 
+          {/* ── Sidebar ── */}
           <div className="w-full lg:w-95">
             <div className="sticky top-28 bg-mkr-dark border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-8">
               {isRegistered ? (

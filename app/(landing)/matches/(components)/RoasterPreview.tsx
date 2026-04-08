@@ -4,10 +4,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Player } from "@/types/types";
+import { MatchPlayerWithUser } from "@/types/types";
 
 interface Props {
-  players: Player[];
+  players: MatchPlayerWithUser[];
   maxPlayers: number;
 }
 

@@ -1,7 +1,10 @@
 import * as z from "zod";
 
 export const MatchRegisterSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  teamId: z.string().min(1, "Please select a team"),
+  selectedPlayerIds: z
+    .array(z.string())
+    .min(1, "Select at least one player to participate"),
   phone: z
     .string()
     .regex(/^\d{9}$/, "Phone number must be 9 digits (e.g. 712345678)"),

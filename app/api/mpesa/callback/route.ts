@@ -1,11 +1,9 @@
 import { db } from "@/lib/db/db";
 import { match, matchPlayer, payment, user } from "@/lib/db/schema";
 import { sendMatchRegistrationEmail } from "@/lib/mail";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-// Always 200 — Safaricom retries on any other status code,
-// which risks duplicate inserts against the unique matchPlayer index.
 const OK = () => new Response("OK", { status: 200 });
 
 export async function POST(req: Request) {
@@ -14,19 +12,12 @@ export async function POST(req: Request) {
     const result = body?.Body?.stkCallback;
 
     if (!result) {
-      console.error(
-        "[mpesa/callback] Malformed payload:",
-        JSON.stringify(body),
-      );
+      console.error("[mpesa/callback] Malformed payload:", JSON.stringify(body));
       return OK();
     }
 
     const checkoutId: string = result.CheckoutRequestID;
     const success: boolean = result.ResultCode === 0;
-
-    console.log(
-      `[mpesa/callback] checkoutId=${checkoutId} success=${success} code=${result.ResultCode}`,
-    );
 
     // 1. Find payment record
     const [paymentRecord] = await db
@@ -35,98 +26,112 @@ export async function POST(req: Request) {
       .where(eq(payment.checkoutRequestId, checkoutId));
 
     if (!paymentRecord) {
-      console.error(
-        "[mpesa/callback] No payment record for checkoutId:",
-        checkoutId,
-      );
+      console.error("[mpesa/callback] No payment record for checkoutId:", checkoutId);
       return OK();
     }
 
-    // 2. Idempotency — Safaricom sometimes fires the callback twice
+    // 2. Idempotency
     if (paymentRecord.status === "success") {
-      console.log("[mpesa/callback] Already processed, skipping:", checkoutId);
+      console.log("[mpesa/callback] Already processed:", checkoutId);
       return OK();
     }
 
-    // 3. Payment failed / cancelled
+    // 3. Payment failed
     if (!success) {
       await db
         .update(payment)
         .set({ status: "failed" })
         .where(eq(payment.id, paymentRecord.id));
-
-      console.log(
-        `[mpesa/callback] Failed. code=${result.ResultCode} desc=${result.ResultDesc}`,
-      );
       return OK();
     }
 
-    // 4. Extract M-Pesa receipt number from callback metadata
+    // 4. Extract receipt
     const mpesaItems = result.CallbackMetadata?.Item as
       | { Name: string; Value?: string | number }[]
       | undefined;
-
     const mpesaReceiptNumber = mpesaItems?.find(
-      (i) => i.Name === "MpesaReceiptNumber",
+      (i) => i.Name === "MpesaReceiptNumber"
     )?.Value as string | undefined;
 
-    // 5. Transaction: mark payment success + insert player (idempotent)
+    // 5. Pull selected player IDs from metadata
+    const meta = paymentRecord.metadata as {
+      teamId?: string;
+      selectedPlayerIds?: string[];
+    } | null;
+
+    const selectedPlayerIds: string[] =
+      meta?.selectedPlayerIds && meta.selectedPlayerIds.length > 0
+        ? meta.selectedPlayerIds
+        : // Fallback for legacy single-player payments
+          [paymentRecord.userId];
+
+    if (!paymentRecord.matchId) {
+      console.error("[mpesa/callback] paymentRecord.matchId is null");
+      return OK();
+    }
+
+    // 6. Transaction: mark payment + insert all players
     await db.transaction(async (tx) => {
       await tx
         .update(payment)
-        .set({ status: "success" })
+        .set({ status: "success", mpesaReceiptNumber })
         .where(eq(payment.id, paymentRecord.id));
 
-      // Guard against duplicate insert (unique_match_player index would throw)
-      if (paymentRecord.matchId == null) {
-        throw new Error("[mpesa/callback] paymentRecord.matchId is null");
-      }
-      const [alreadyEnlisted] = await tx
-        .select({ id: matchPlayer.id })
+      // Find which players are already enlisted (idempotency)
+      const alreadyEnlisted = await tx
+        .select({ playerId: matchPlayer.playerId })
         .from(matchPlayer)
         .where(
           and(
-            eq(matchPlayer.matchId, paymentRecord.matchId),
-            eq(matchPlayer.playerId, paymentRecord.userId),
-          ),
+            eq(matchPlayer.matchId, paymentRecord.matchId!),
+            inArray(matchPlayer.playerId, selectedPlayerIds)
+          )
         );
 
-      if (!alreadyEnlisted) {
-        const [playerRecord] = await tx
-          .select({ position: user.position })
+      const alreadyIds = new Set(alreadyEnlisted.map((r) => r.playerId));
+      const toInsert = selectedPlayerIds.filter((id) => !alreadyIds.has(id));
+
+      if (toInsert.length > 0) {
+        // Fetch positions for each player from the user table
+        const playerRecords = await tx
+          .select({ id: user.id, position: user.position })
           .from(user)
-          .where(eq(user.id, paymentRecord.userId));
+          .where(inArray(user.id, toInsert));
 
-        await tx.insert(matchPlayer).values({
-          matchId: paymentRecord.matchId,
-          playerId: paymentRecord.userId,
-          position: playerRecord.position,
-        });
+        const positionMap = new Map(playerRecords.map((p) => [p.id, p.position]));
 
-        // Append userId to match.registeredPlayerIds
+        await tx.insert(matchPlayer).values(
+          toInsert.map((playerId) => ({
+            matchId: paymentRecord.matchId!,
+            playerId,
+            position: positionMap.get(playerId) ?? "Midfielder",
+            team: "home" as const,
+          }))
+        );
+
+        // Update registeredPlayerIds on the match
         const [currentMatch] = await tx
           .select({ registeredPlayerIds: match.registeredPlayerIds })
           .from(match)
-          .where(eq(match.id, paymentRecord.matchId));
+          .where(eq(match.id, paymentRecord.matchId!));
+
+        const existingIds: string[] = currentMatch.registeredPlayerIds ?? [];
+        const newIds = [...new Set([...existingIds, ...toInsert])];
 
         await tx
           .update(match)
           .set({
-            registeredPlayerIds: sql`${JSON.stringify([
-              ...(currentMatch.registeredPlayerIds ?? []),
-              paymentRecord.userId,
-            ])}::jsonb`,
+            registeredPlayerIds: sql`${JSON.stringify(newIds)}::jsonb`,
           })
-          .where(eq(match.id, paymentRecord.matchId));
+          .where(eq(match.id, paymentRecord.matchId!));
 
         console.log(
-          `[mpesa/callback] Enlisted player=${paymentRecord.userId} match=${paymentRecord.matchId} receipt=${mpesaReceiptNumber}`,
+          `[mpesa/callback] Enlisted ${toInsert.length} player(s) for match=${paymentRecord.matchId}`
         );
       }
     });
 
-    // 6. Send confirmation email — isolated so a broken SMTP config
-    //    doesn't roll back the player insert above
+    // 7. Send confirmation email to the payer (captain)
     if (!paymentRecord.emailSent) {
       try {
         const [userData] = await db
@@ -144,29 +149,23 @@ export async function POST(req: Request) {
             email: userData.email,
             name: userData.name,
             match: matchData,
+            playerCount: selectedPlayerIds.length,
           });
 
           await db
             .update(payment)
             .set({ emailSent: true })
             .where(eq(payment.id, paymentRecord.id));
-
-          console.log(`[mpesa/callback] Email sent to ${userData.email}`);
         }
       } catch (emailErr) {
-        console.error(
-          "[mpesa/callback] Email failed (player still added):",
-          emailErr,
-        );
+        console.error("[mpesa/callback] Email failed:", emailErr);
       }
     }
 
-    // 7. Revalidate match page so UI reflects the new player
     revalidatePath(`/matches/${paymentRecord.matchId}`);
-
     return OK();
   } catch (err) {
     console.error("[mpesa/callback] Unhandled error:", err);
-    return OK(); // always 200
+    return OK();
   }
 }

@@ -26,8 +26,8 @@ export const sendVerificationEmail = async (email: string, token: string) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Account Verification</title>
         </head>
-        <body style="margin:0;padding:0;background-color:#000000;font-family:Arial,Helvetica,sans-serif">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#000000;padding:40px 0">
+        <body style="margin:0;padding:0;background-color:#ffffff;font-family:Arial,Helvetica,sans-serif">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;padding:40px 0">
             <tr>
             <td align="center">
 
@@ -101,14 +101,12 @@ export const sendMatchRegistrationEmail = async ({
   email,
   name,
   match,
+  playerCount = 1,
 }: {
   email: string;
   name?: string | null;
-  match: {
-    id: string;
-    location: string;
-    date: Date | string;
-  };
+  match: { id: string; location: string; date: Date | string };
+  playerCount?: number;
 }) => {
   const matchDate = new Date(match.date);
   const matchLink = `${process.env.NEXT_PUBLIC_BASE_URL}/matches/${match.id}`;
@@ -120,50 +118,27 @@ export const sendMatchRegistrationEmail = async ({
     html: `
       <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px">
         <h2 style="color:#111">You're In! ⚽</h2>
-
-        <p>Hi ${name ?? "Player"},</p>
-
+        <p>Hi ${name ?? "Captain"},</p>
         <p>
-          Your payment was successful and your slot for the match has been
-          <strong>confirmed</strong>.
+          Your payment was successful and <strong>${playerCount} player${playerCount > 1 ? "s have" : " has"} been
+          confirmed</strong> for the match.
         </p>
-
         <hr style="margin:24px 0"/>
-
         <p><strong>📍 Venue:</strong> ${match.location}</p>
         <p><strong>📅 Date:</strong> ${matchDate.toLocaleDateString("en-GB", {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
+          weekday: "long", day: "numeric", month: "long", year: "numeric",
         })}</p>
         <p><strong>⏰ Time:</strong> ${matchDate.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
+          hour: "2-digit", minute: "2-digit",
         })}</p>
-
         <div style="margin:32px 0">
           <a href="${matchLink}"
-            style="
-              background:#ffea00;
-              color:#111;
-              padding:12px 18px;
-              border-radius:6px;
-              font-weight:bold;
-              text-decoration:none;
-              display:inline-block;
-            ">
+            style="background:#ffea00;color:#111;padding:12px 18px;border-radius:6px;font-weight:bold;text-decoration:none;display:inline-block;">
             View Match Details
           </a>
         </div>
-
-        <p style="font-size:13px;color:#666">
-          If you have any questions, reply to this email.
-        </p>
-
-        <p style="font-size:12px;color:#999;margin-top:40px">
-          © ${new Date().getFullYear()} MKR Sports
-        </p>
+        <p style="font-size:13px;color:#666">If you have any questions, reply to this email.</p>
+        <p style="font-size:12px;color:#999;margin-top:40px">© ${new Date().getFullYear()} MKR Sports</p>
       </div>
     `,
   });

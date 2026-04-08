@@ -121,7 +121,7 @@ export default function SquadPage() {
 
       {noTeamStep === "create" && (
         <CreateTeamModal
-          onClose={() => setNoTeamStep("alert")}
+          onClose={() => setNoTeamStep("idle")}
           onCreated={handleTeamCreated}
         />
       )}
