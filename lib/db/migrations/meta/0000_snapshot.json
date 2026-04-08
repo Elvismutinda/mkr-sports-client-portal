@@ -1,9 +1,232 @@
 {
-  "id": "669a4f8c-f11f-4c9e-a440-6e8a64dbbdc3",
+  "id": "dd3d25a3-3791-4887-be3c-c5bbabffe126",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.challenges": {
+      "name": "challenges",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "challenger_team_id": {
+          "name": "challenger_team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "challenged_team_id": {
+          "name": "challenged_team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proposed_date": {
+          "name": "proposed_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proposed_turf_id": {
+          "name": "proposed_turf_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proposed_location": {
+          "name": "proposed_location",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mode": {
+          "name": "mode",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'5v5'"
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "challenge_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
+        },
+        "match_id": {
+          "name": "match_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "responded_at": {
+          "name": "responded_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unique_pending_challenge": {
+          "name": "unique_pending_challenge",
+          "columns": [
+            {
+              "expression": "challenger_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "challenged_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "challenge_challenger_idx": {
+          "name": "challenge_challenger_idx",
+          "columns": [
+            {
+              "expression": "challenger_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "challenge_challenged_idx": {
+          "name": "challenge_challenged_idx",
+          "columns": [
+            {
+              "expression": "challenged_team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "challenge_status_idx": {
+          "name": "challenge_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "challenges_challenger_team_id_teams_id_fk": {
+          "name": "challenges_challenger_team_id_teams_id_fk",
+          "tableFrom": "challenges",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "challenger_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "challenges_challenged_team_id_teams_id_fk": {
+          "name": "challenges_challenged_team_id_teams_id_fk",
+          "tableFrom": "challenges",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "challenged_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "challenges_proposed_turf_id_turfs_id_fk": {
+          "name": "challenges_proposed_turf_id_turfs_id_fk",
+          "tableFrom": "challenges",
+          "tableTo": "turfs",
+          "columnsFrom": [
+            "proposed_turf_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "challenges_match_id_matches_id_fk": {
+          "name": "challenges_match_id_matches_id_fk",
+          "tableFrom": "challenges",
+          "tableTo": "matches",
+          "columnsFrom": [
+            "match_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.matches": {
       "name": "matches",
       "schema": "",
@@ -1641,6 +1864,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "home_pitch_id": {
+          "name": "home_pitch_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "training_pitch_id": {
+          "name": "training_pitch_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "stats": {
           "name": "stats",
           "type": "jsonb",
@@ -1677,6 +1912,32 @@
           "tableTo": "users",
           "columnsFrom": [
             "captain_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "teams_home_pitch_id_turfs_id_fk": {
+          "name": "teams_home_pitch_id_turfs_id_fk",
+          "tableFrom": "teams",
+          "tableTo": "turfs",
+          "columnsFrom": [
+            "home_pitch_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "teams_training_pitch_id_turfs_id_fk": {
+          "name": "teams_training_pitch_id_turfs_id_fk",
+          "tableFrom": "teams",
+          "tableTo": "turfs",
+          "columnsFrom": [
+            "training_pitch_id"
           ],
           "columnsTo": [
             "id"
@@ -2422,7 +2683,7 @@
           "type": "player_positions",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "avatar_url": {
           "name": "avatar_url",
@@ -2576,6 +2837,17 @@
     }
   },
   "enums": {
+    "public.challenge_status": {
+      "name": "challenge_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "ACCEPTED",
+        "DECLINED",
+        "CANCELLED",
+        "EXPIRED"
+      ]
+    },
     "public.fixture_status": {
       "name": "fixture_status",
       "schema": "public",

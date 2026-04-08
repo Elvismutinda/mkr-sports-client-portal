@@ -27,10 +27,10 @@ export default function TournamentHero({ tournament }: Props) {
         </div>
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter leading-none mb-2">
+      <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">
         {tournament.name}
       </h1>
-      <p className="text-mkr-yellow font-black uppercase italic tracking-widest text-sm mb-4">
+      <p className="text-mkr-yellow font-black uppercase tracking-widest text-sm mb-4">
         KSH {tournament.prizePool.toLocaleString()} Prize Pool
       </p>
 
@@ -40,7 +40,7 @@ export default function TournamentHero({ tournament }: Props) {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span className="text-xs font-black uppercase italic tracking-wider">
+          <span className="text-xs font-black uppercase tracking-wider">
             {tournament.location}
           </span>
         </div>
@@ -54,7 +54,7 @@ export default function TournamentHero({ tournament }: Props) {
             <line x1="8" y1="2" x2="8" y2="6" />
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
-          <span className="text-xs font-black uppercase italic tracking-wider">
+          <span className="text-xs font-black uppercase tracking-wider">
             {new Date(tournament.commencement).toLocaleDateString("en-KE", {
               weekday: "long",
               month: "long",
@@ -66,7 +66,7 @@ export default function TournamentHero({ tournament }: Props) {
       )}
 
       {tournament.description && (
-        <p className="text-sm text-slate-400 font-medium leading-relaxed italic border-t border-white/5 pt-5">
+        <p className="text-sm text-slate-400 font-medium leading-relaxed border-t border-white/5 pt-5">
           {tournament.description}
         </p>
       )}

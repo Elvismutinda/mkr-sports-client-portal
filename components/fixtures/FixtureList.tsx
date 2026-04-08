@@ -29,7 +29,7 @@ export function FixtureList({ fixtures }: Props) {
           <div className="h-px flex-1 bg-white/5" />
         </div>
         {upcoming.length === 0 ? (
-          <p className="text-slate-600 text-sm font-semibold italic">
+          <p className="text-slate-600 text-sm font-semibold">
             No upcoming fixtures. Check back soon.
           </p>
         ) : (

@@ -33,7 +33,10 @@ export const positionEnum = pgEnum("player_positions", positions);
 
 export const tournamentStatuses = ["UPCOMING", "ONGOING", "COMPLETED"] as const;
 export type TournamentStatus = (typeof tournamentStatuses)[number];
-export const tournamentStatusEnum = pgEnum("tournament_status", tournamentStatuses);
+export const tournamentStatusEnum = pgEnum(
+  "tournament_status",
+  tournamentStatuses,
+);
 
 export const tournamentFormats = [
   "LEAGUE",
@@ -42,9 +45,18 @@ export const tournamentFormats = [
   "ROUND_ROBIN",
 ] as const;
 export type TournamentFormat = (typeof tournamentFormats)[number];
-export const tournamentFormatEnum = pgEnum("tournament_format", tournamentFormats);
+export const tournamentFormatEnum = pgEnum(
+  "tournament_format",
+  tournamentFormats,
+);
 
-export const fixtureStatuses = ["UPCOMING", "LIVE", "COMPLETED", "CANCELLED", "POSTPONED"] as const;
+export const fixtureStatuses = [
+  "UPCOMING",
+  "LIVE",
+  "COMPLETED",
+  "CANCELLED",
+  "POSTPONED",
+] as const;
 export type FixtureStatus = (typeof fixtureStatuses)[number];
 export const fixtureStatusEnum = pgEnum("fixture_status", fixtureStatuses);
 
@@ -56,13 +68,21 @@ export const mediaTypes = ["image", "video"] as const;
 export type MediaType = (typeof mediaTypes)[number];
 export const mediaTypeEnum = pgEnum("media_type", mediaTypes);
 
-export const turfSurfaces = ["natural_grass", "artificial_turf", "futsal_floor", "indoor"] as const;
+export const turfSurfaces = [
+  "natural_grass",
+  "artificial_turf",
+  "futsal_floor",
+  "indoor",
+] as const;
 export type TurfSurface = (typeof turfSurfaces)[number];
 export const turfSurfaceEnum = pgEnum("turf_surface", turfSurfaces);
 
 export const systemUserStatuses = ["active", "inactive", "suspended"] as const;
 export type SystemUserStatus = (typeof systemUserStatuses)[number];
-export const systemUserStatusEnum = pgEnum("system_user_status", systemUserStatuses);
+export const systemUserStatusEnum = pgEnum(
+  "system_user_status",
+  systemUserStatuses,
+);
 
 export const notificationTypes = [
   "MATCH_REMINDER",
@@ -72,7 +92,23 @@ export const notificationTypes = [
   "GENERAL",
 ] as const;
 export type NotificationType = (typeof notificationTypes)[number];
-export const notificationTypeEnum = pgEnum("notification_type", notificationTypes);
+export const notificationTypeEnum = pgEnum(
+  "notification_type",
+  notificationTypes,
+);
+
+export const challengeStatuses = [
+  "PENDING", // sent, waiting for response
+  "ACCEPTED", // accepted, match will be created
+  "DECLINED", // challenged team declined
+  "CANCELLED", // challenger withdrew
+  "EXPIRED", // no response within deadline
+] as const;
+export type ChallengeStatus = (typeof challengeStatuses)[number];
+export const challengeStatusEnum = pgEnum(
+  "challenge_status",
+  challengeStatuses,
+);
 
 // ─────────────────────────────────────────────
 // ROLES & PERMISSIONS (Admin / System)
@@ -87,7 +123,9 @@ export const systemRole = pgTable("system_roles", {
   name: varchar("name", { length: 64 }).notNull().unique(),
   description: varchar("description", { length: 256 }),
   isDefault: boolean("is_default").notNull().default(false),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -101,9 +139,11 @@ export const systemRole = pgTable("system_roles", {
 export const permission = pgTable("permissions", {
   id: uuid("id").defaultRandom().primaryKey(),
   key: varchar("key", { length: 128 }).notNull().unique(), // e.g. "CREATE_USER"
-  group: varchar("group", { length: 64 }),                 // e.g. "User"
+  group: varchar("group", { length: 64 }), // e.g. "User"
   description: varchar("description", { length: 256 }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 /**
@@ -119,7 +159,9 @@ export const rolePermission = pgTable(
     permissionId: uuid("permission_id")
       .references(() => permission.id, { onDelete: "cascade" })
       .notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     uniqueRolePermission: uniqueIndex("unique_role_permission").on(
@@ -142,9 +184,13 @@ export const systemUser = pgTable("system_users", {
   phone: varchar("phone", { length: 15 }),
   avatarUrl: varchar("avatar_url", { length: 512 }),
   status: systemUserStatusEnum("status").notNull().default("active"),
-  roleId: uuid("role_id").references(() => systemRole.id, { onDelete: "set null" }),
+  roleId: uuid("role_id").references(() => systemRole.id, {
+    onDelete: "set null",
+  }),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -189,7 +235,9 @@ export const user = pgTable("users", {
   }>(),
   aiAnalysis: text("ai_analysis"),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -217,7 +265,9 @@ export const turf = pgTable("turfs", {
   agentId: uuid("agent_id").references(() => user.id, { onDelete: "set null" }), // turf owner
   isActive: boolean("is_active").notNull().default(true),
   images: jsonb("images").$type<string[]>().default([]),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -233,9 +283,11 @@ export const team = pgTable("teams", {
   name: varchar("name", { length: 128 }).notNull(),
   badgeUrl: varchar("badge_url", { length: 512 }),
   badgeFallback: varchar("badge_fallback", { length: 8 }), // initials
-  type: varchar("type", { length: 64 }),                    // e.g. "Club", "National", "5-a-side"
+  type: varchar("type", { length: 64 }), // e.g. "Club", "National", "5-a-side"
   bio: text("bio"),
-  captainId: uuid("captain_id").references(() => user.id, { onDelete: "set null" }),
+  captainId: uuid("captain_id").references(() => user.id, {
+    onDelete: "set null",
+  }),
   homePitchId: uuid("home_pitch_id").references(() => turf.id, {
     onDelete: "set null",
   }),
@@ -253,7 +305,9 @@ export const team = pgTable("teams", {
     rating: number;
   }>(),
   isActive: boolean("is_active").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -273,7 +327,9 @@ export const teamMember = pgTable(
       .notNull(),
     position: positionEnum("position"),
     jerseyNumber: smallint("jersey_number"),
-    joinedAt: timestamp("joined_at", { withTimezone: true }).notNull().defaultNow(),
+    joinedAt: timestamp("joined_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     isActive: boolean("is_active").notNull().default(true),
   },
   (table) => ({
@@ -283,6 +339,54 @@ export const teamMember = pgTable(
     ),
     teamIdx: index("team_member_team_idx").on(table.teamId),
     playerIdx: index("team_member_player_idx").on(table.playerId),
+  }),
+);
+
+export const challenge = pgTable(
+  "challenges",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    // The team sending the challenge
+    challengerTeamId: uuid("challenger_team_id")
+      .references(() => team.id, { onDelete: "cascade" })
+      .notNull(),
+    // The team being challenged
+    challengedTeamId: uuid("challenged_team_id")
+      .references(() => team.id, { onDelete: "cascade" })
+      .notNull(),
+    // Proposed match details
+    proposedDate: timestamp("proposed_date", { withTimezone: true }),
+    proposedTurfId: uuid("proposed_turf_id").references(() => turf.id, {
+      onDelete: "set null",
+    }),
+    proposedLocation: varchar("proposed_location", { length: 256 }),
+    mode: varchar("mode", { length: 32 }).notNull().default("5v5"),
+    message: text("message"), // optional trash talk / context
+    status: challengeStatusEnum("status").notNull().default("PENDING"),
+    // If accepted, the resulting match
+    matchId: uuid("match_id").references(() => match.id, {
+      onDelete: "set null",
+    }),
+    // Who acted last (for audit)
+    respondedAt: timestamp("responded_at", { withTimezone: true }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    // Prevent duplicate pending challenges between same two teams
+    uniquePendingChallenge: uniqueIndex("unique_pending_challenge").on(
+      table.challengerTeamId,
+      table.challengedTeamId,
+    ),
+    challengerIdx: index("challenge_challenger_idx").on(table.challengerTeamId),
+    challengedIdx: index("challenge_challenged_idx").on(table.challengedTeamId),
+    statusIdx: index("challenge_status_idx").on(table.status),
   }),
 );
 
@@ -304,12 +408,20 @@ export const tournament = pgTable("tournaments", {
   status: tournamentStatusEnum("status").notNull().default("UPCOMING"),
   startsAt: timestamp("starts_at", { withTimezone: true }),
   endsAt: timestamp("ends_at", { withTimezone: true }),
-  registrationDeadline: timestamp("registration_deadline", { withTimezone: true }),
+  registrationDeadline: timestamp("registration_deadline", {
+    withTimezone: true,
+  }),
   rules: text("rules"),
-  bannerId: uuid("banner_id").references(() => media.id, { onDelete: "set null" }),
-  organizedBy: uuid("organized_by").references(() => systemUser.id, { onDelete: "set null" }),
+  bannerId: uuid("banner_id").references(() => media.id, {
+    onDelete: "set null",
+  }),
+  organizedBy: uuid("organized_by").references(() => systemUser.id, {
+    onDelete: "set null",
+  }),
   isPublic: boolean("is_public").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow()
@@ -327,8 +439,12 @@ export const tournamentTeam = pgTable(
     teamId: uuid("team_id")
       .references(() => team.id, { onDelete: "cascade" })
       .notNull(),
-    registeredAt: timestamp("registered_at", { withTimezone: true }).notNull().defaultNow(),
-    paymentStatus: paymentStatusEnum("payment_status").notNull().default("pending"),
+    registeredAt: timestamp("registered_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    paymentStatus: paymentStatusEnum("payment_status")
+      .notNull()
+      .default("pending"),
     isEliminated: boolean("is_eliminated").notNull().default(false),
     groupName: varchar("group_name", { length: 8 }), // e.g. "A", "B" for group stage
   },
@@ -337,7 +453,9 @@ export const tournamentTeam = pgTable(
       table.tournamentId,
       table.teamId,
     ),
-    tournamentIdx: index("tournament_team_tournament_idx").on(table.tournamentId),
+    tournamentIdx: index("tournament_team_tournament_idx").on(
+      table.tournamentId,
+    ),
   }),
 );
 
@@ -352,14 +470,17 @@ export const tournamentParticipant = pgTable(
     playerId: uuid("player_id")
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
-    registeredAt: timestamp("registered_at", { withTimezone: true }).notNull().defaultNow(),
-    paymentStatus: paymentStatusEnum("payment_status").notNull().default("pending"),
+    registeredAt: timestamp("registered_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    paymentStatus: paymentStatusEnum("payment_status")
+      .notNull()
+      .default("pending"),
   },
   (table) => ({
-    uniqueTournamentParticipant: uniqueIndex("unique_tournament_participant").on(
-      table.tournamentId,
-      table.playerId,
-    ),
+    uniqueTournamentParticipant: uniqueIndex(
+      "unique_tournament_participant",
+    ).on(table.tournamentId, table.playerId),
   }),
 );
 
@@ -375,7 +496,9 @@ export const standing = pgTable(
       .references(() => tournament.id, { onDelete: "cascade" })
       .notNull(),
     teamId: uuid("team_id").references(() => team.id, { onDelete: "cascade" }),
-    playerId: uuid("player_id").references(() => user.id, { onDelete: "cascade" }),
+    playerId: uuid("player_id").references(() => user.id, {
+      onDelete: "cascade",
+    }),
     groupName: varchar("group_name", { length: 8 }),
     rank: integer("rank").notNull().default(0),
     matchesPlayed: integer("matches_played").notNull().default(0),
@@ -414,22 +537,33 @@ export const match = pgTable(
     tournamentId: uuid("tournament_id").references(() => tournament.id, {
       onDelete: "set null",
     }),
-    homeTeamId: uuid("home_team_id").references(() => team.id, { onDelete: "set null" }),
-    awayTeamId: uuid("away_team_id").references(() => team.id, { onDelete: "set null" }),
+    homeTeamId: uuid("home_team_id").references(() => team.id, {
+      onDelete: "set null",
+    }),
+    awayTeamId: uuid("away_team_id").references(() => team.id, {
+      onDelete: "set null",
+    }),
     /** Legacy/open match: list of player IDs on each side */
     homeTeam: jsonb("home_team").$type<string[]>().notNull().default([]),
     awayTeam: jsonb("away_team").$type<string[]>().notNull().default([]),
     mode: varchar("mode", { length: 32 }).notNull(), // "5v5", "7v7", "11v11"
-    price: numeric("price", { precision: 10, scale: 2 }).notNull().default("0.00"),
+    price: numeric("price", { precision: 10, scale: 2 })
+      .notNull()
+      .default("0.00"),
     maxPlayers: integer("max_players").notNull().default(14),
-    registeredPlayerIds: jsonb("registered_player_ids").$type<string[]>().notNull().default([]),
+    registeredPlayerIds: jsonb("registered_player_ids")
+      .$type<string[]>()
+      .notNull()
+      .default([]),
     status: fixtureStatusEnum("status").notNull().default("UPCOMING"),
     completed: boolean("completed").notNull().default(false),
     score: jsonb("score").$type<{ home: number; away: number }>(),
     matchReport: text("match_report"),
     isPublic: boolean("is_public").notNull().default(true),
     roundName: varchar("round_name", { length: 64 }), // "Quarter Final", "Group Stage - MD1"
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()
@@ -461,7 +595,9 @@ export const matchPlayer = pgTable(
     redCard: boolean("red_card").notNull().default(false),
     rating: numeric("rating", { precision: 4, scale: 2 }),
     motm: boolean("motm").notNull().default(false),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     uniquePlayerPerMatch: uniqueIndex("unique_match_player").on(
@@ -481,7 +617,9 @@ export const media = pgTable(
   "media",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    uploaderId: uuid("uploader_id").references(() => user.id, { onDelete: "set null" }),
+    uploaderId: uuid("uploader_id").references(() => user.id, {
+      onDelete: "set null",
+    }),
     type: mediaTypeEnum("type").notNull(),
     url: varchar("url", { length: 1024 }).notNull(),
     caption: varchar("caption", { length: 256 }),
@@ -490,7 +628,9 @@ export const media = pgTable(
     /** Polymorphic reference: what entity this media belongs to */
     entityType: varchar("entity_type", { length: 64 }), // "tournament" | "match" | "team" | "turf"
     entityId: uuid("entity_id"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     entityIdx: index("media_entity_idx").on(table.entityType, table.entityId),
@@ -506,8 +646,12 @@ export const payment = pgTable(
   "payments",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").references(() => user.id).notNull(),
-    matchId: uuid("match_id").references(() => match.id, { onDelete: "set null" }),
+    userId: uuid("user_id")
+      .references(() => user.id)
+      .notNull(),
+    matchId: uuid("match_id").references(() => match.id, {
+      onDelete: "set null",
+    }),
     tournamentId: uuid("tournament_id").references(() => tournament.id, {
       onDelete: "set null",
     }),
@@ -521,7 +665,9 @@ export const payment = pgTable(
     failureReason: varchar("failure_reason", { length: 256 }),
     emailSent: boolean("email_sent").notNull().default(false),
     metadata: jsonb("metadata"), // extra Mpesa/provider fields
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
       .defaultNow()
@@ -551,7 +697,9 @@ export const notification = pgTable(
     isRead: boolean("is_read").notNull().default(false),
     entityType: varchar("entity_type", { length: 64 }),
     entityId: uuid("entity_id"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     userIdx: index("notification_user_idx").on(table.userId),
@@ -567,16 +715,18 @@ export const systemLog = pgTable(
   "system_logs",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    actorId: uuid("actor_id"),           // system_user or user who performed action
+    actorId: uuid("actor_id"), // system_user or user who performed action
     actorType: varchar("actor_type", { length: 16 }), // "system_user" | "user"
     action: varchar("action", { length: 128 }).notNull(), // e.g. "CREATE_MATCH"
     entityType: varchar("entity_type", { length: 64 }),
     entityId: uuid("entity_id"),
     description: text("description"),
-    ipAddress: varchar("ip_address", { length: 45 }),  // supports IPv6
+    ipAddress: varchar("ip_address", { length: 45 }), // supports IPv6
     userAgent: text("user_agent"),
     metadata: jsonb("metadata"),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     actorIdx: index("system_log_actor_idx").on(table.actorId),
@@ -598,7 +748,10 @@ export const verificationToken = pgTable(
     expires: timestamp("expires", { withTimezone: true }).notNull(),
   },
   (table) => ({
-    emailTokenUnique: uniqueIndex("email_token_unique").on(table.email, table.token),
+    emailTokenUnique: uniqueIndex("email_token_unique").on(
+      table.email,
+      table.token,
+    ),
   }),
 );
 
@@ -610,7 +763,9 @@ export const passwordResetToken = pgTable(
     token: varchar("token", { length: 64 }).notNull().unique(),
     expires: timestamp("expires", { withTimezone: true }).notNull(),
     usedAt: timestamp("used_at", { withTimezone: true }),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => ({
     emailIdx: index("password_reset_email_idx").on(table.email),
@@ -621,31 +776,33 @@ export const passwordResetToken = pgTable(
 // TYPE EXPORTS (inferred from schema)
 // ─────────────────────────────────────────────
 
-export type User                   = typeof user.$inferSelect;
-export type NewUser                = typeof user.$inferInsert;
-export type SystemUser             = typeof systemUser.$inferSelect;
-export type NewSystemUser          = typeof systemUser.$inferInsert;
-export type SystemRole             = typeof systemRole.$inferSelect;
-export type NewSystemRole          = typeof systemRole.$inferInsert;
-export type Permission             = typeof permission.$inferSelect;
-export type NewPermission          = typeof permission.$inferInsert;
-export type RolePermission         = typeof rolePermission.$inferSelect;
-export type Turf                   = typeof turf.$inferSelect;
-export type NewTurf                = typeof turf.$inferInsert;
-export type Team                   = typeof team.$inferSelect;
-export type NewTeam                = typeof team.$inferInsert;
-export type TeamMember             = typeof teamMember.$inferSelect;
-export type Tournament             = typeof tournament.$inferSelect;
-export type NewTournament          = typeof tournament.$inferInsert;
-export type TournamentTeam         = typeof tournamentTeam.$inferSelect;
-export type TournamentParticipant  = typeof tournamentParticipant.$inferSelect;
-export type Standing               = typeof standing.$inferSelect;
-export type Match                  = typeof match.$inferSelect;
-export type NewMatch               = typeof match.$inferInsert;
-export type MatchPlayer            = typeof matchPlayer.$inferSelect;
-export type Media                  = typeof media.$inferSelect;
-export type NewMedia               = typeof media.$inferInsert;
-export type Payment                = typeof payment.$inferSelect;
-export type NewPayment             = typeof payment.$inferInsert;
-export type Notification           = typeof notification.$inferSelect;
-export type SystemLog              = typeof systemLog.$inferSelect;
+export type User = typeof user.$inferSelect;
+export type NewUser = typeof user.$inferInsert;
+export type SystemUser = typeof systemUser.$inferSelect;
+export type NewSystemUser = typeof systemUser.$inferInsert;
+export type SystemRole = typeof systemRole.$inferSelect;
+export type NewSystemRole = typeof systemRole.$inferInsert;
+export type Permission = typeof permission.$inferSelect;
+export type NewPermission = typeof permission.$inferInsert;
+export type RolePermission = typeof rolePermission.$inferSelect;
+export type Turf = typeof turf.$inferSelect;
+export type NewTurf = typeof turf.$inferInsert;
+export type Team = typeof team.$inferSelect;
+export type NewTeam = typeof team.$inferInsert;
+export type TeamMember = typeof teamMember.$inferSelect;
+export type Challenge = typeof challenge.$inferSelect;
+export type NewChallenge = typeof challenge.$inferInsert;
+export type Tournament = typeof tournament.$inferSelect;
+export type NewTournament = typeof tournament.$inferInsert;
+export type TournamentTeam = typeof tournamentTeam.$inferSelect;
+export type TournamentParticipant = typeof tournamentParticipant.$inferSelect;
+export type Standing = typeof standing.$inferSelect;
+export type Match = typeof match.$inferSelect;
+export type NewMatch = typeof match.$inferInsert;
+export type MatchPlayer = typeof matchPlayer.$inferSelect;
+export type Media = typeof media.$inferSelect;
+export type NewMedia = typeof media.$inferInsert;
+export type Payment = typeof payment.$inferSelect;
+export type NewPayment = typeof payment.$inferInsert;
+export type Notification = typeof notification.$inferSelect;
+export type SystemLog = typeof systemLog.$inferSelect;

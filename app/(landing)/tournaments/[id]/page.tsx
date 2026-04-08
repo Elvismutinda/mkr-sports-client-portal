@@ -72,10 +72,10 @@ export default async function TournamentDetailPage({ params }: PageProps) {
           <div className="w-full lg:w-80 shrink-0">
             <div className="sticky top-28 bg-[#0d1117] border border-white/10 rounded-[2rem] p-7 space-y-6">
               <div className="border-b border-white/5 pb-5">
-                <h3 className="text-lg font-black text-white uppercase italic tracking-tighter mb-1">
+                <h3 className="text-lg font-black text-white uppercase tracking-tighter mb-1">
                   {isRegistered ? "You're Enlisted" : "Join Campaign"}
                 </h3>
-                <p className="text-xs font-black uppercase italic tracking-widest text-mkr-yellow">
+                <p className="text-xs font-black uppercase tracking-widest text-mkr-yellow">
                   KSH {tournament.prizePool?.toLocaleString()} Prize Pool
                 </p>
               </div>
@@ -122,7 +122,7 @@ export default async function TournamentDetailPage({ params }: PageProps) {
 
               <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/5">
                 <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
-                  <div className="text-lg font-black text-white italic leading-none mb-1">
+                  <div className="text-lg font-black text-white leading-none mb-1">
                     {tournament.participants?.length ?? 0}
                   </div>
                   <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">
@@ -130,7 +130,7 @@ export default async function TournamentDetailPage({ params }: PageProps) {
                   </div>
                 </div>
                 <div className="bg-mkr-navy rounded-xl p-3 text-center border border-white/5">
-                  <div className="text-lg font-black text-mkr-yellow italic leading-none mb-1">
+                  <div className="text-lg font-black text-mkr-yellow leading-none mb-1">
                     {tournament.standings?.length ?? 0}
                   </div>
                   <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">

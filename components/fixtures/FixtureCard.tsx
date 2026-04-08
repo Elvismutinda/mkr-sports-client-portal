@@ -110,7 +110,7 @@ export function FixtureCard({ match, playerPosition }: Props) {
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-0.5">
               Report
             </p>
-            <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 italic">
+            <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
               {match.matchReport}
             </p>
           </div>

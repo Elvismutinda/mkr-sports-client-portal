@@ -42,15 +42,6 @@ export function PlayerCard({ player, onRemove }: Props) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div
-        className="absolute right-4 top-4 opacity-[0.04] pointer-events-none select-none"
-        aria-hidden
-      >
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M8 21h8M12 17v4M7 4H4a1 1 0 0 0-1 1v2a4 4 0 0 0 4 4h1M17 4h3a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4h-1M7 4h10v7a5 5 0 0 1-10 0V4Z" />
-        </svg>
-      </div>
-
       <div className="flex items-center gap-4">
         <div className="relative shrink-0">
           <div className="w-16 h-16 rounded-xl overflow-hidden border-2 border-white/10 bg-slate-800">
@@ -115,7 +106,6 @@ export function PlayerCard({ player, onRemove }: Props) {
 
       <SkillIndexBar rating={player.stats?.rating ?? 0} />
 
-      {/* Remove action — only shown when captain passes onRemove */}
       {onRemove && (
         <div className="pt-3 border-t border-white/5 flex justify-end">
           <RemovePlayerButton

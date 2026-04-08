@@ -193,7 +193,6 @@ export function CreateTeamModal({ onClose, onCreated }: Props) {
               )}
             />
 
-            {/* SAME AS HOME */}
             <FormField
               control={form.control}
               name="sameAsHome"

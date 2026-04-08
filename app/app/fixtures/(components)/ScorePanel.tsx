@@ -49,7 +49,7 @@ export function ScorePanel({ score, completed, matchReport }: Props) {
             <p className="text-[10px] font-black tracking-widest uppercase text-slate-500 mb-2">
               Match Report
             </p>
-            <p className="text-sm text-slate-400 leading-relaxed italic">
+            <p className="text-sm text-slate-400 leading-relaxed">
               {matchReport}
             </p>
           </div>

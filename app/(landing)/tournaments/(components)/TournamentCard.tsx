@@ -35,10 +35,10 @@ export default function TournamentCard({ tournament }: Props) {
       </div>
 
       <div className="pr-24">
-        <h3 className="text-xl font-black text-white uppercase italic tracking-tight leading-tight mb-1.5">
+        <h3 className="text-xl font-black text-white uppercase tracking-tight leading-tight mb-1.5">
           {tournament.name}
         </h3>
-        <p className="text-sm text-slate-500 font-black uppercase italic tracking-wider">
+        <p className="text-sm text-slate-500 font-black uppercase tracking-wider">
           KSH {tournament.prizePool.toLocaleString()} Prize Pool
         </p>
         {tournament.commencement && (
@@ -54,7 +54,7 @@ export default function TournamentCard({ tournament }: Props) {
       </div>
 
       {tournament.description && (
-        <p className="text-xs text-slate-500 font-medium leading-relaxed italic border-t border-white/5 pt-4">
+        <p className="text-xs text-slate-500 font-medium leading-relaxed border-t border-white/5 pt-4">
           {tournament.description}
         </p>
       )}
@@ -63,10 +63,10 @@ export default function TournamentCard({ tournament }: Props) {
         <div className="space-y-2 border-t border-white/5 pt-4">
           {tournament.standings.slice(0, 3).map((s) => (
             <div key={s.rank} className="flex items-center justify-between">
-              <span className="text-xs font-black text-slate-300 uppercase italic tracking-wider">
+              <span className="text-xs font-black text-slate-300 uppercase tracking-wider">
                 #{s.rank} {s.name}
               </span>
-              <span className="text-xs font-black text-mkr-yellow uppercase italic tracking-wider">
+              <span className="text-xs font-black text-mkr-yellow uppercase tracking-wider">
                 {s.points} Pts
               </span>
             </div>

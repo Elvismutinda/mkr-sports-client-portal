@@ -72,7 +72,7 @@ export default function RegisterForTournament({ tournamentId, userId }: Props) {
             )}
           </div>
         </div>
-        <span className="text-[10px] font-black uppercase italic tracking-widest text-slate-400 leading-relaxed">
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-relaxed">
           I acknowledge the campaign protocol and confirm eligibility to participate.
         </span>
       </label>

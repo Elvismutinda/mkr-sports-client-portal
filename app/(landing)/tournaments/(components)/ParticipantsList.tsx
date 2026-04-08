@@ -23,7 +23,7 @@ export default function ParticipantsList({ participants }: Props) {
   return (
     <div className="bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-black text-white uppercase italic tracking-tight">
+        <h2 className="text-lg font-black text-white uppercase tracking-tight">
           Enlisted Players
         </h2>
         <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
@@ -47,7 +47,7 @@ export default function ParticipantsList({ participants }: Props) {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-white uppercase italic tracking-wide truncate">
+              <p className="text-xs font-black text-white uppercase tracking-wide truncate">
                 {p.name}
               </p>
               {p.position ? (

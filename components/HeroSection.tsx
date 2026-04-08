@@ -8,7 +8,7 @@ export default function HeroSection() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-248 h-148 bg-mkr-yellow/5 rounded-full blur-[150px] -z-10" />
 
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-6xl font-black text-white mb-8 leading-none uppercase tracking-tighter">
+        <h1 className="text-4xl md:text-6xl font-black text-white mb-8 leading-none uppercase tracking-tighter">
           Dominate Your <span className="text-mkr-yellow">Pitch</span>
         </h1>
 

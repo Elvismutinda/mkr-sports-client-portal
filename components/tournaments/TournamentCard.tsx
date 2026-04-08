@@ -50,7 +50,7 @@ export function TournamentCard({ tournament }: { tournament: Tournament }) {
       </div>
 
       <p
-        className={`text-sm leading-relaxed italic font-medium ${
+        className={`text-sm leading-relaxed font-medium ${
           isCompleted ? "text-slate-600" : "text-slate-300"
         }`}
       >

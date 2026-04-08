@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1775477456556,
-      "tag": "0000_married_white_queen",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1775478314595,
-      "tag": "0001_polite_hannibal_king",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1775569052357,
-      "tag": "0002_shiny_proudstar",
+      "when": 1775628198098,
+      "tag": "0000_breezy_menace",
       "breakpoints": true
     }
   ]

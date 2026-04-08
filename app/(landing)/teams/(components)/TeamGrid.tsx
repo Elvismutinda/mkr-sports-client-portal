@@ -33,7 +33,7 @@ function TeamCardSkeleton() {
 export default function TeamGrid({ teams, loading }: Props) {
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
           <TeamCardSkeleton key={i} />
         ))}
@@ -52,7 +52,7 @@ export default function TeamGrid({ teams, loading }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {teams.map((team) => (
         <TeamCard key={team.id} team={team} />
       ))}

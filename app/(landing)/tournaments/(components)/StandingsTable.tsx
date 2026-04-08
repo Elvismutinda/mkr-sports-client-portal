@@ -9,7 +9,7 @@ export default function StandingsTable({ standings }: Props) {
 
   return (
     <div className="bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7">
-      <h2 className="text-lg font-black text-white uppercase italic tracking-tight mb-6">
+      <h2 className="text-lg font-black text-white uppercase tracking-tight mb-6">
         Current Standings
       </h2>
 
@@ -45,7 +45,7 @@ export default function StandingsTable({ standings }: Props) {
               >
                 <td className="px-3 py-3 rounded-l-xl">
                   <span
-                    className={`text-sm font-black italic ${
+                    className={`text-sm font-black ${
                       idx === 0 ? "text-mkr-yellow" : "text-slate-500"
                     }`}
                   >
@@ -53,7 +53,7 @@ export default function StandingsTable({ standings }: Props) {
                   </span>
                 </td>
                 <td className="px-3 py-3">
-                  <span className="text-sm font-black text-white uppercase italic tracking-wide whitespace-nowrap">
+                  <span className="text-sm font-black text-white uppercase tracking-wide whitespace-nowrap">
                     {s.name}
                   </span>
                 </td>
@@ -76,7 +76,7 @@ export default function StandingsTable({ standings }: Props) {
                 )}
                 <td className="px-3 py-3 text-right rounded-r-xl">
                   <span
-                    className={`text-sm font-black italic ${
+                    className={`text-sm font-black ${
                       idx === 0 ? "text-mkr-yellow" : "text-slate-300"
                     }`}
                   >

@@ -1,3 +1,4 @@
+CREATE TYPE "public"."challenge_status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED', 'CANCELLED', 'EXPIRED');--> statement-breakpoint
 CREATE TYPE "public"."fixture_status" AS ENUM('UPCOMING', 'LIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED');--> statement-breakpoint
 CREATE TYPE "public"."media_type" AS ENUM('image', 'video');--> statement-breakpoint
 CREATE TYPE "public"."notification_type" AS ENUM('MATCH_REMINDER', 'PAYMENT_CONFIRMED', 'TOURNAMENT_UPDATE', 'TEAM_INVITE', 'GENERAL');--> statement-breakpoint
@@ -8,6 +9,23 @@ CREATE TYPE "public"."tournament_format" AS ENUM('LEAGUE', 'KNOCKOUT', 'GROUP_ST
 CREATE TYPE "public"."tournament_status" AS ENUM('UPCOMING', 'ONGOING', 'COMPLETED');--> statement-breakpoint
 CREATE TYPE "public"."turf_surface" AS ENUM('natural_grass', 'artificial_turf', 'futsal_floor', 'indoor');--> statement-breakpoint
 CREATE TYPE "public"."user_roles" AS ENUM('player', 'agent');--> statement-breakpoint
+CREATE TABLE "challenges" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"challenger_team_id" uuid NOT NULL,
+	"challenged_team_id" uuid NOT NULL,
+	"proposed_date" timestamp with time zone,
+	"proposed_turf_id" uuid,
+	"proposed_location" varchar(256),
+	"mode" varchar(32) DEFAULT '5v5' NOT NULL,
+	"message" text,
+	"status" "challenge_status" DEFAULT 'PENDING' NOT NULL,
+	"match_id" uuid,
+	"responded_at" timestamp with time zone,
+	"expires_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "matches" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"date" timestamp with time zone NOT NULL,
@@ -184,6 +202,8 @@ CREATE TABLE "teams" (
 	"type" varchar(64),
 	"bio" text,
 	"captain_id" uuid,
+	"home_pitch_id" uuid,
+	"training_pitch_id" uuid,
 	"stats" jsonb,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -269,7 +289,7 @@ CREATE TABLE "users" (
 	"email_verified" timestamp with time zone,
 	"password" varchar(256) NOT NULL,
 	"phone" varchar(15),
-	"position" "player_positions",
+	"position" "player_positions" NOT NULL,
 	"avatar_url" varchar(512),
 	"role" "user_roles" DEFAULT 'player' NOT NULL,
 	"bio" text,
@@ -291,6 +311,10 @@ CREATE TABLE "verification_tokens" (
 	CONSTRAINT "verification_tokens_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
+ALTER TABLE "challenges" ADD CONSTRAINT "challenges_challenger_team_id_teams_id_fk" FOREIGN KEY ("challenger_team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "challenges" ADD CONSTRAINT "challenges_challenged_team_id_teams_id_fk" FOREIGN KEY ("challenged_team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "challenges" ADD CONSTRAINT "challenges_proposed_turf_id_turfs_id_fk" FOREIGN KEY ("proposed_turf_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "challenges" ADD CONSTRAINT "challenges_match_id_matches_id_fk" FOREIGN KEY ("match_id") REFERENCES "public"."matches"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_turf_id_turfs_id_fk" FOREIGN KEY ("turf_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_home_team_id_teams_id_fk" FOREIGN KEY ("home_team_id") REFERENCES "public"."teams"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
@@ -309,6 +333,8 @@ ALTER TABLE "standings" ADD CONSTRAINT "standings_team_id_teams_id_fk" FOREIGN K
 ALTER TABLE "standings" ADD CONSTRAINT "standings_player_id_users_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "system_users" ADD CONSTRAINT "system_users_role_id_system_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."system_roles"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "teams" ADD CONSTRAINT "teams_captain_id_users_id_fk" FOREIGN KEY ("captain_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "teams" ADD CONSTRAINT "teams_home_pitch_id_turfs_id_fk" FOREIGN KEY ("home_pitch_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "teams" ADD CONSTRAINT "teams_training_pitch_id_turfs_id_fk" FOREIGN KEY ("training_pitch_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "team_members" ADD CONSTRAINT "team_members_team_id_teams_id_fk" FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "team_members" ADD CONSTRAINT "team_members_player_id_users_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tournaments" ADD CONSTRAINT "tournaments_turf_id_turfs_id_fk" FOREIGN KEY ("turf_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
@@ -319,6 +345,10 @@ ALTER TABLE "tournament_participants" ADD CONSTRAINT "tournament_participants_pl
 ALTER TABLE "tournament_teams" ADD CONSTRAINT "tournament_teams_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tournament_teams" ADD CONSTRAINT "tournament_teams_team_id_teams_id_fk" FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "turfs" ADD CONSTRAINT "turfs_agent_id_users_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "unique_pending_challenge" ON "challenges" USING btree ("challenger_team_id","challenged_team_id");--> statement-breakpoint
+CREATE INDEX "challenge_challenger_idx" ON "challenges" USING btree ("challenger_team_id");--> statement-breakpoint
+CREATE INDEX "challenge_challenged_idx" ON "challenges" USING btree ("challenged_team_id");--> statement-breakpoint
+CREATE INDEX "challenge_status_idx" ON "challenges" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "match_tournament_idx" ON "matches" USING btree ("tournament_id");--> statement-breakpoint
 CREATE INDEX "match_date_idx" ON "matches" USING btree ("date");--> statement-breakpoint
 CREATE INDEX "match_status_idx" ON "matches" USING btree ("status");--> statement-breakpoint
