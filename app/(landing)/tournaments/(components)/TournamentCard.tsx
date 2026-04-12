@@ -30,7 +30,8 @@ export default function TournamentCard({ tournament }: Props) {
         <div
           className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl rounded-tr-[1.75rem] ${STATUS_STYLES[tournament.status]}`}
         >
-          {tournament.status.charAt(0) + tournament.status.slice(1).toLowerCase()}
+          {tournament.status.charAt(0) +
+            tournament.status.slice(1).toLowerCase()}
         </div>
       </div>
 
@@ -74,22 +75,30 @@ export default function TournamentCard({ tournament }: Props) {
         </div>
       )}
 
-      {tournament.participants && tournament.participants.length > 0 && (
-        <div className="flex items-center gap-2">
+      {tournament.teams && tournament.teams.length > 0 ? (
+        <div className="flex items-center gap-3 border-t border-white/5 pt-4">
           <div className="flex -space-x-2">
-            {tournament.participants.slice(0, 4).map((p) => (
+            {tournament.teams.slice(0, 4).map((t) => (
               <div
-                key={p.id}
-                className="w-6 h-6 rounded-full bg-mkr-navy border-2 border-[#0d1117] flex items-center justify-center"
+                key={t.id}
+                className="w-6 h-6 rounded-lg bg-mkr-navy border-2 border-[#0d1117] flex items-center justify-center overflow-hidden"
               >
-                <span className="text-[8px] font-black text-slate-400 uppercase">
-                  {p.name[0]}
+                <span className="text-[7px] font-black text-mkr-yellow uppercase">
+                  {(t.badgeFallback ?? t.name.slice(0, 2)).toUpperCase()}
                 </span>
               </div>
             ))}
           </div>
           <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-            {tournament.participants.length} registered
+            {tournament.teams.length} team
+            {tournament.teams.length !== 1 ? "s" : ""} registered
+            {tournament.maxTeams ? ` / ${tournament.maxTeams} max` : ""}
+          </span>
+        </div>
+      ) : (
+        <div className="border-t border-white/5 pt-4">
+          <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+            No teams registered yet
           </span>
         </div>
       )}

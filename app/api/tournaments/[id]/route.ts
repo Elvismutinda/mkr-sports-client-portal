@@ -2,13 +2,12 @@ import { db } from "@/lib/db/db";
 import {
   tournament,
   standing,
-  tournamentParticipant,
   tournamentTeam,
-  user,
   team,
   match,
+  teamMember,
 } from "@/lib/db/schema";
-import { eq, asc, desc } from "drizzle-orm";
+import { eq, asc, desc, inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 interface RouteParams {
@@ -34,103 +33,94 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     }
 
     // 2. All data in parallel
-    const [allStandings, participants, registeredTeams, fixtures] =
-      await Promise.all([
-        // Full standings with team details
-        db
-          .select({
-            rank: standing.rank,
-            points: standing.points,
-            matchesPlayed: standing.matchesPlayed,
-            wins: standing.wins,
-            draws: standing.draws,
-            losses: standing.losses,
-            goalsFor: standing.goalsFor,
-            goalsAgainst: standing.goalsAgainst,
-            goalDifference: standing.goalDifference,
-            groupName: standing.groupName,
-            teamId: team.id,
-            teamName: team.name,
-            teamBadge: team.badgeFallback,
-            teamBadgeUrl: team.badgeUrl,
-          })
-          .from(standing)
-          .leftJoin(team, eq(standing.teamId, team.id))
-          .where(eq(standing.tournamentId, id))
-          .orderBy(asc(standing.rank)),
+    const [allStandings, registeredTeams, fixtures] = await Promise.all([
+      // Standings with team details
+      db
+        .select({
+          rank: standing.rank,
+          points: standing.points,
+          matchesPlayed: standing.matchesPlayed,
+          wins: standing.wins,
+          draws: standing.draws,
+          losses: standing.losses,
+          goalsFor: standing.goalsFor,
+          goalsAgainst: standing.goalsAgainst,
+          goalDifference: standing.goalDifference,
+          groupName: standing.groupName,
+          teamId: team.id,
+          teamName: team.name,
+        })
+        .from(standing)
+        .leftJoin(team, eq(standing.teamId, team.id))
+        .where(eq(standing.tournamentId, id))
+        .orderBy(asc(standing.rank)),
 
-        // All individual participants with position
-        db
-          .select({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            position: user.position,
-            avatarUrl: user.avatarUrl,
-          })
-          .from(tournamentParticipant)
-          .innerJoin(user, eq(tournamentParticipant.playerId, user.id))
-          .where(eq(tournamentParticipant.tournamentId, id))
-          .orderBy(asc(user.name)),
+      // Registered teams with stats
+      db
+        .select({
+          id: team.id,
+          name: team.name,
+          badgeFallback: team.badgeFallback,
+          badgeUrl: team.badgeUrl,
+          type: team.type,
+          stats: team.stats,
+          groupName: tournamentTeam.groupName,
+          isEliminated: tournamentTeam.isEliminated,
+          paymentStatus: tournamentTeam.paymentStatus,
+          registeredAt: tournamentTeam.registeredAt,
+          teamId: tournamentTeam.teamId,
+        })
+        .from(tournamentTeam)
+        .innerJoin(team, eq(tournamentTeam.teamId, team.id))
+        .where(eq(tournamentTeam.tournamentId, id))
+        .orderBy(asc(team.name)),
 
-        // Registered teams with stats
-        db
-          .select({
-            id: team.id,
-            name: team.name,
-            badgeFallback: team.badgeFallback,
-            badgeUrl: team.badgeUrl,
-            type: team.type,
-            stats: team.stats,
-            groupName: tournamentTeam.groupName,
-            isEliminated: tournamentTeam.isEliminated,
-            paymentStatus: tournamentTeam.paymentStatus,
-            registeredAt: tournamentTeam.registeredAt,
-          })
-          .from(tournamentTeam)
-          .innerJoin(team, eq(tournamentTeam.teamId, team.id))
-          .where(eq(tournamentTeam.tournamentId, id))
-          .orderBy(asc(team.name)),
+      // Tournament fixtures
+      db
+        .select({
+          id: match.id,
+          date: match.date,
+          location: match.location,
+          mode: match.mode,
+          status: match.status,
+          roundName: match.roundName,
+          score: match.score,
+          completed: match.completed,
+          homeTeamId: match.homeTeamId,
+          awayTeamId: match.awayTeamId,
+        })
+        .from(match)
+        .where(eq(match.tournamentId, id))
+        .orderBy(desc(match.date)),
+    ]);
 
-        // Tournament fixtures (matches linked to this tournament)
-        db
-          .select({
-            id: match.id,
-            date: match.date,
-            location: match.location,
-            mode: match.mode,
-            status: match.status,
-            roundName: match.roundName,
-            score: match.score,
-            completed: match.completed,
-            homeTeamId: match.homeTeamId,
-            awayTeamId: match.awayTeamId,
-          })
-          .from(match)
-          .where(eq(match.tournamentId, id))
-          .orderBy(desc(match.date)),
-      ]);
+    // 3. Collect all user IDs that belong to registered teams
+    //    so the detail page can determine if the current user's team is enlisted.
+    let registeredUserIds: string[] = [];
+    if (registeredTeams.length > 0) {
+      const registeredTeamIds = registeredTeams.map((rt) => rt.teamId);
+      const members = await db
+        .select({ playerId: teamMember.playerId })
+        .from(teamMember)
+        .where(inArray(teamMember.teamId, registeredTeamIds));
+      registeredUserIds = [...new Set(members.map((m) => m.playerId))];
+    }
 
-    // Resolve team names for fixtures
-    const teamIds = [
+    // 4. Resolve team names for fixtures
+    const fixtureTeamIds = [
       ...new Set(
-        fixtures.flatMap(
-          (f) => [f.homeTeamId, f.awayTeamId].filter(Boolean) as string[],
-        ),
+        fixtures
+          .flatMap((f) => [f.homeTeamId, f.awayTeamId])
+          .filter(Boolean) as string[],
       ),
     ];
 
     let teamMap: Record<string, { name: string; badge: string | null }> = {};
-    if (teamIds.length > 0) {
+    if (fixtureTeamIds.length > 0) {
       const teams = await db
         .select({ id: team.id, name: team.name, badge: team.badgeFallback })
         .from(team)
-        .where(
-          // Use inArray once available, fallback to manual OR for now
-          teamIds.length === 1
-            ? eq(team.id, teamIds[0])
-            : eq(team.id, teamIds[0]), // Drizzle's inArray: import { inArray } from "drizzle-orm"
-        );
+        .where(inArray(team.id, fixtureTeamIds));
       teamMap = Object.fromEntries(
         teams.map((t) => [t.id, { name: t.name, badge: t.badge }]),
       );
@@ -142,7 +132,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       awayTeamName: f.awayTeamId ? (teamMap[f.awayTeamId]?.name ?? null) : null,
     }));
 
-    // Group standings by group if applicable
+    // 5. Group standings by group if applicable
     const standingsByGroup = allStandings.reduce<
       Record<string, typeof allStandings>
     >((acc, s) => {
@@ -169,9 +159,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       rules: t.rules,
       isPublic: t.isPublic,
       createdAt: t.createdAt,
-      // Alias used by existing components
       commencement: t.startsAt,
-      // Flattened standings for StandingsTable component (overall / first group)
       standings: (standingsByGroup["overall"] ?? allStandings).map((s) => ({
         rank: s.rank,
         name: s.teamName ?? "Unknown",
@@ -185,10 +173,10 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
         goalDifference: s.goalDifference,
       })),
       standingsByGroup,
-      // All individual participants (used by ParticipantsList)
-      participants,
-      // Team-based participants (for team tournaments)
+      // Team-based participants (primary — tournaments are team-only now)
       teams: registeredTeams,
+      // All user IDs whose teams are registered — used for isTeamRegistered check
+      registeredUserIds,
       fixtures: enrichedFixtures,
     };
 

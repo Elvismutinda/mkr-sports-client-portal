@@ -140,7 +140,6 @@ export default function RegisterMatchForm({ match }: { match: Match }) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
 
-        {/* ── Step indicator ── */}
         <div className="flex items-center gap-2">
           {(["team", "players", "payment"] as Step[]).map((s, i) => (
             <div key={s} className="flex items-center gap-2">
@@ -168,7 +167,6 @@ export default function RegisterMatchForm({ match }: { match: Match }) {
           </span>
         </div>
 
-        {/* ── Step 1: Team selection ── */}
         {step === "team" && (
           <div className="space-y-3 animate-fade-in">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
@@ -229,7 +227,6 @@ export default function RegisterMatchForm({ match }: { match: Match }) {
           </div>
         )}
 
-        {/* ── Step 2: Player selection ── */}
         {step === "players" && selectedTeam && (
           <div className="space-y-3 animate-fade-in">
             <div className="flex items-center justify-between">
@@ -334,7 +331,6 @@ export default function RegisterMatchForm({ match }: { match: Match }) {
           </div>
         )}
 
-        {/* ── Step 3: Payment ── */}
         {step === "payment" && (
           <div className="space-y-4 animate-fade-in">
             <div className="bg-mkr-navy/50 border border-white/10 rounded-2xl p-4 space-y-2">

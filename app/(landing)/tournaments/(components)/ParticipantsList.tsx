@@ -24,7 +24,7 @@ export default function ParticipantsList({ participants }: Props) {
     <div className="bg-[#0d1117] border border-white/5 rounded-[1.75rem] p-7">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-black text-white uppercase tracking-tight">
-          Enlisted Players
+          Registered Players
         </h2>
         <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
           {participants.length} total

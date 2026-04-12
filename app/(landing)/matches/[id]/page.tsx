@@ -127,7 +127,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 className="relative w-full bg-[#1a2a1a] rounded-[2rem] border-2 border-white/10 overflow-hidden shadow-2xl"
                 style={{ aspectRatio: "4/3" }}
               >
-                {/* Pitch stripe overlay */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
@@ -136,17 +135,14 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                   }}
                 />
 
-                {/* Outer boundary */}
                 <div
                   className="absolute border border-white/20 pointer-events-none"
                   style={{ inset: "4%" }}
                 />
-                {/* Halfway line */}
                 <div
                   className="absolute left-[4%] right-[4%] border-t border-dashed border-white/20 pointer-events-none"
                   style={{ top: "50%" }}
                 />
-                {/* Centre circle */}
                 <div
                   className="absolute border border-white/20 rounded-full pointer-events-none"
                   style={{
@@ -157,7 +153,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     transform: "translate(-50%, -50%)",
                   }}
                 />
-                {/* Centre spot */}
                 <div
                   className="absolute w-1.5 h-1.5 rounded-full bg-white/25 pointer-events-none"
                   style={{
@@ -166,7 +161,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     transform: "translate(-50%, -50%)",
                   }}
                 />
-                {/* Top penalty area */}
                 <div
                   className="absolute border border-white/20 border-t-0 pointer-events-none"
                   style={{
@@ -177,7 +171,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "18%",
                   }}
                 />
-                {/* Top 6-yard box */}
                 <div
                   className="absolute border border-white/15 border-t-0 pointer-events-none"
                   style={{
@@ -188,7 +181,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "8%",
                   }}
                 />
-                {/* Bottom penalty area */}
                 <div
                   className="absolute border border-white/20 border-b-0 pointer-events-none"
                   style={{
@@ -199,7 +191,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                     height: "18%",
                   }}
                 />
-                {/* Bottom 6-yard box */}
                 <div
                   className="absolute border border-white/15 border-b-0 pointer-events-none"
                   style={{
@@ -214,7 +205,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                 <div className="absolute inset-0">
                   {hasTeams ? (
                     <>
-                      {/* Away team — top half */}
                       {(
                         [
                           "Goalkeeper",
@@ -264,7 +254,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
                         });
                       })}
 
-                      {/* Home team — bottom half */}
                       {(
                         [
                           "Goalkeeper",
@@ -454,7 +443,6 @@ export default async function MatchDetailsPage({ params }: PageProps) {
             </section>
           </div>
 
-          {/* ── Sidebar ── */}
           <div className="w-full lg:w-95">
             <div className="sticky top-28 bg-mkr-dark border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-8">
               {isRegistered ? (

@@ -1,7 +1,8 @@
 import { db } from "@/lib/db/db";
-import { tournament, tournamentParticipant, user } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { tournament, tournamentTeam, teamMember, team } from "@/lib/db/schema";
+import { eq, and, inArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -10,21 +11,36 @@ interface RouteParams {
 export async function POST(req: NextRequest, { params }: RouteParams) {
   try {
     const { id: tournamentId } = await params;
-    const { userId } = await req.json();
 
-    if (!userId) {
+    // 1. Auth — must be signed in
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
+
+    const { teamId, selectedMemberIds } = await req.json();
+
+    if (!teamId) {
       return NextResponse.json(
-        { error: "userId is required" },
+        { error: "teamId is required" },
         { status: 400 },
       );
     }
 
-    // 1. Verify tournament exists and is open
+    if (!Array.isArray(selectedMemberIds) || selectedMemberIds.length === 0) {
+      return NextResponse.json(
+        { error: "Select at least one member to participate." },
+        { status: 400 },
+      );
+    }
+
+    // 2. Verify tournament exists and is open
     const [t] = await db
       .select({
         id: tournament.id,
         status: tournament.status,
-        maxPlayersPerTeam: tournament.maxPlayersPerTeam,
+        maxTeams: tournament.maxTeams,
         registrationDeadline: tournament.registrationDeadline,
       })
       .from(tournament)
@@ -55,55 +71,118 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // 2. Verify player exists
-    const [player] = await db
-      .select({ id: user.id, isActive: user.isActive })
-      .from(user)
-      .where(eq(user.id, userId))
-      .limit(1);
-
-    if (!player) {
-      return NextResponse.json({ error: "Player not found" }, { status: 404 });
-    }
-
-    if (!player.isActive) {
-      return NextResponse.json(
-        { error: "Your account is not active." },
-        { status: 403 },
-      );
-    }
-
-    // 3. Check not already registered
-    const [existing] = await db
-      .select({ id: tournamentParticipant.id })
-      .from(tournamentParticipant)
+    // 3. Verify the requesting user is an active member of this team
+    const [membership] = await db
+      .select({ id: teamMember.id })
+      .from(teamMember)
       .where(
         and(
-          eq(tournamentParticipant.tournamentId, tournamentId),
-          eq(tournamentParticipant.playerId, userId),
+          eq(teamMember.teamId, teamId),
+          eq(teamMember.playerId, userId),
+          eq(teamMember.isActive, true),
         ),
       )
       .limit(1);
 
-    if (existing) {
+    if (!membership) {
       return NextResponse.json(
-        { error: "You are already registered for this tournament." },
+        { error: "You are not an active member of this team." },
+        { status: 403 },
+      );
+    }
+
+    // 4. Verify the team itself exists and is active
+    const [teamRecord] = await db
+      .select({ id: team.id, isActive: team.isActive })
+      .from(team)
+      .where(eq(team.id, teamId))
+      .limit(1);
+
+    if (!teamRecord || !teamRecord.isActive) {
+      return NextResponse.json(
+        { error: "Team not found or inactive." },
+        { status: 404 },
+      );
+    }
+
+    // 5. Check team is not already registered
+    const [alreadyRegistered] = await db
+      .select({ id: tournamentTeam.id })
+      .from(tournamentTeam)
+      .where(
+        and(
+          eq(tournamentTeam.tournamentId, tournamentId),
+          eq(tournamentTeam.teamId, teamId),
+        ),
+      )
+      .limit(1);
+
+    if (alreadyRegistered) {
+      return NextResponse.json(
+        { error: "This team is already registered for the tournament." },
         { status: 409 },
       );
     }
 
-    // 4. Register
+    // 6. Max teams capacity check
+    if (t.maxTeams != null) {
+      const [{ count }] = await db
+        .select({
+          count: db.$count(
+            tournamentTeam,
+            eq(tournamentTeam.tournamentId, tournamentId),
+          ),
+        })
+        .from(tournamentTeam)
+        .where(eq(tournamentTeam.tournamentId, tournamentId));
+
+      if (Number(count) >= t.maxTeams) {
+        return NextResponse.json(
+          { error: "Tournament has reached its maximum team capacity." },
+          { status: 400 },
+        );
+      }
+    }
+
+    // 7. Validate all selected members are active members of the team
+    const validMembers = await db
+      .select({ playerId: teamMember.playerId })
+      .from(teamMember)
+      .where(
+        and(
+          eq(teamMember.teamId, teamId),
+          eq(teamMember.isActive, true),
+          inArray(teamMember.playerId, selectedMemberIds),
+        ),
+      );
+
+    if (validMembers.length !== selectedMemberIds.length) {
+      return NextResponse.json(
+        {
+          error: "Some selected members are not active members of this team.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // 8. Register the team
     const [registration] = await db
-      .insert(tournamentParticipant)
+      .insert(tournamentTeam)
       .values({
         tournamentId,
-        playerId: userId,
+        teamId,
         paymentStatus: "pending",
       })
       .returning();
 
     return NextResponse.json(
-      { message: "Successfully registered.", data: registration },
+      {
+        message: "Team successfully enlisted.",
+        data: {
+          registration,
+          memberCount: selectedMemberIds.length,
+        },
+      },
       { status: 201 },
     );
   } catch (error) {
