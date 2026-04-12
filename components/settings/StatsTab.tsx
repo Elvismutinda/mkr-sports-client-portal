@@ -17,15 +17,10 @@ interface Props {
     attributes?: Player["attributes"];
     aiAnalysis?: string;
   };
-  analysis?: string;
   onGetAnalysis?: () => void;
 }
 
-export const StatsTab: React.FC<Props> = ({
-  user,
-  analysis,
-  onGetAnalysis,
-}) => {
+export const StatsTab: React.FC<Props> = ({ user, onGetAnalysis }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -58,13 +53,13 @@ export const StatsTab: React.FC<Props> = ({
                 onClick={onGetAnalysis}
                 className="text-[8px]! px-3!"
               >
-                {analysis ? "Refresh" : "Generate"}
+                {user.aiAnalysis ? "Refresh" : "Generate"}
               </Button>
             </div>
-            {analysis ? (
+            {user.aiAnalysis ? (
               <div className="prose prose-invert prose-sm max-w-none">
                 <p className="text-[11px] text-slate-300 leading-relaxed bg-mkr-navy/50 p-4 rounded-xl border-l-2 border-mkr-yellow font-bold">
-                  {analysis}
+                  {user.aiAnalysis}
                 </p>
               </div>
             ) : (

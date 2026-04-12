@@ -18,6 +18,7 @@ export type ProfileUser = User & {
   avatarUrl?: string;
   stats?: Player["stats"];
   attributes?: Player["attributes"];
+  aiAnalysis?: string;
 };
 
 interface Props {

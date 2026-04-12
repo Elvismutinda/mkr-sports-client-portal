@@ -49,7 +49,7 @@ const RegisterPage = () => {
             Sports
           </span>
         </div>
-        <h1 className="text-3xl font-black text-white mb-2 uppercase tracking-tighter">
+        <h1 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">
           Join the Squad
         </h1>
       </div>

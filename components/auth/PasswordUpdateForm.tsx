@@ -22,6 +22,7 @@ import { updatePassword } from "@/app/app/settings/actions";
 import { Button } from "../ui/button";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { PasswordStrengthBar } from "../PasswordStrengthBar";
 
 const PasswordUpdateForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -38,6 +39,9 @@ const PasswordUpdateForm = () => {
     },
   });
 
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedNewPassword = form.watch("newPassword");
+
   const handlePasswordUpdate = (values: UpdatePasswordRequest) => {
     const toastId = toast.loading("Updating password...");
 
@@ -47,12 +51,12 @@ const PasswordUpdateForm = () => {
           toast.error(data?.error, { id: toastId });
         } else {
           toast.success(data?.success, { id: toastId });
-
           signOut({ callbackUrl: "/login" });
         }
       });
     });
   };
+
   return (
     <>
       <Form {...form}>
@@ -127,6 +131,7 @@ const PasswordUpdateForm = () => {
                     </button>
                   </div>
                 </FormControl>
+                <PasswordStrengthBar password={watchedNewPassword} />
                 <FormMessage />
               </FormItem>
             )}

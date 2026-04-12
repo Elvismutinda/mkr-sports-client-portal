@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { POSITIONS } from "@/types/types";
+import { PasswordStrengthBar } from "../PasswordStrengthBar";
 
 // sessionStorage key
 const FORM_STORAGE_KEY = "mkr_register_step1";
@@ -41,7 +42,6 @@ const RegisterForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
 
-  // Load persisted step-1 data from sessionStorage
   const getPersistedStep1 = (): Partial<Step1Fields> => {
     if (typeof window === "undefined") return {};
     try {
@@ -66,11 +66,9 @@ const RegisterForm = () => {
     },
   });
 
-  // Persist step-1 fields to sessionStorage whenever they change
   useEffect(() => {
     // eslint-disable-next-line react-hooks/incompatible-library
     const subscription = form.watch((values, { name: fieldName }) => {
-      // Only write when a step-1 field changes
       if (
         !fieldName ||
         ["name", "email", "phone", "position"].includes(fieldName)
@@ -84,14 +82,15 @@ const RegisterForm = () => {
         try {
           sessionStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(payload));
         } catch {
-          // sessionStorage may be unavailable (e.g. private mode quota)
+          // sessionStorage may be unavailable
         }
       }
     });
     return () => subscription.unsubscribe();
   }, [form]);
 
-  // Validate only step-1 fields before advancing
+  const watchedPassword = form.watch("password");
+
   const handleNextStep = async () => {
     const isValid = await form.trigger(["name", "email", "phone", "position"]);
     if (isValid) setStep(2);
@@ -104,7 +103,6 @@ const RegisterForm = () => {
           toast.error(data?.error);
         } else {
           toast.success(data?.success);
-          // Clear persisted data on success
           try {
             sessionStorage.removeItem(FORM_STORAGE_KEY);
           } catch {}
@@ -297,6 +295,7 @@ const RegisterForm = () => {
                     </button>
                   </div>
                 </FormControl>
+                <PasswordStrengthBar password={watchedPassword} />
                 <FormMessage />
               </FormItem>
             )}

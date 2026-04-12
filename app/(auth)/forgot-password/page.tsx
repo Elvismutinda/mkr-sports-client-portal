@@ -1,22 +1,21 @@
 import { Metadata } from "next";
+import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import Link from "next/link";
-
 import { cn } from "@/lib/utils";
-import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
+  title: "Forgot Password",
+  description: "Reset your MKR Sports password",
 };
 
-const LoginPage = () => {
+export default function ForgotPasswordPage() {
   return (
     <>
       <div className="flex justify-between items-start mb-10">
         <Link
-          href="/"
+          href="/login"
           className={cn(
-            "text-slate-500 hover:text-mkr-yellow transition-colors bg-white/5 p-2 rounded-xl group"
+            "text-slate-500 hover:text-mkr-yellow transition-colors bg-white/5 p-2 rounded-xl group",
           )}
         >
           <svg
@@ -50,12 +49,10 @@ const LoginPage = () => {
           </span>
         </div>
         <h1 className="text-2xl font-black text-white uppercase tracking-tighter">
-          Welcome Back
+          Forgot Password
         </h1>
       </div>
-      <LoginForm />
+      <ForgotPasswordForm />
     </>
   );
-};
-
-export default LoginPage;
+}

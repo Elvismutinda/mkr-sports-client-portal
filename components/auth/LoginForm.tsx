@@ -54,7 +54,9 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="block text-slate-500 text-[12px] font-black uppercase tracking-widest mb-1.5 ml-1">Email</FormLabel>
+                  <FormLabel className="block text-slate-500 text-[12px] font-black uppercase tracking-widest mb-1.5 ml-1">
+                    Email
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -74,7 +76,9 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="block text-slate-500 text-[12px] font-black uppercase tracking-widest mb-1.5 ml-1">Password</FormLabel>
+                  <FormLabel className="block text-slate-500 text-[12px] font-black uppercase tracking-widest mb-1.5 ml-1">
+                    Password
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
@@ -103,9 +107,12 @@ const LoginForm = () => {
             />
           </div>
 
-          {/* <p className="text-sm underline text-[#32c06b] cursor-pointer">
+          <Link
+            href={"/forgot-password"}
+            className="text-mkr-yellow hover:text-white text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+          >
             Forgot password?
-          </p> */}
+          </Link>
 
           <div>
             <Button
