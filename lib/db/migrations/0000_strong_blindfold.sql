@@ -2,13 +2,15 @@ CREATE TYPE "public"."challenge_status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED
 CREATE TYPE "public"."fixture_status" AS ENUM('UPCOMING', 'LIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED');--> statement-breakpoint
 CREATE TYPE "public"."media_type" AS ENUM('image', 'video');--> statement-breakpoint
 CREATE TYPE "public"."notification_type" AS ENUM('MATCH_REMINDER', 'PAYMENT_CONFIRMED', 'TOURNAMENT_UPDATE', 'TEAM_INVITE', 'GENERAL');--> statement-breakpoint
+CREATE TYPE "public"."partner_role" AS ENUM('turf_manager');--> statement-breakpoint
+CREATE TYPE "public"."partner_status" AS ENUM('active', 'inactive', 'suspended');--> statement-breakpoint
 CREATE TYPE "public"."payment_status" AS ENUM('pending', 'success', 'failed');--> statement-breakpoint
 CREATE TYPE "public"."player_positions" AS ENUM('Goalkeeper', 'Defender', 'Midfielder', 'Forward');--> statement-breakpoint
 CREATE TYPE "public"."system_user_status" AS ENUM('active', 'inactive', 'suspended');--> statement-breakpoint
 CREATE TYPE "public"."tournament_format" AS ENUM('LEAGUE', 'KNOCKOUT', 'GROUP_STAGE_KNOCKOUT', 'ROUND_ROBIN');--> statement-breakpoint
 CREATE TYPE "public"."tournament_status" AS ENUM('UPCOMING', 'ONGOING', 'COMPLETED');--> statement-breakpoint
 CREATE TYPE "public"."turf_surface" AS ENUM('natural_grass', 'artificial_turf', 'futsal_floor', 'indoor');--> statement-breakpoint
-CREATE TYPE "public"."user_roles" AS ENUM('player', 'agent');--> statement-breakpoint
+CREATE TYPE "public"."user_roles" AS ENUM('player');--> statement-breakpoint
 CREATE TABLE "challenges" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"challenger_team_id" uuid NOT NULL,
@@ -88,6 +90,23 @@ CREATE TABLE "notifications" (
 	"entity_type" varchar(64),
 	"entity_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "partners" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar(64) NOT NULL,
+	"email" varchar(64) NOT NULL,
+	"email_verified" timestamp with time zone,
+	"password" varchar(256) NOT NULL,
+	"phone" varchar(15),
+	"avatar_url" varchar(512),
+	"business_name" varchar(128),
+	"role" "partner_role" DEFAULT 'turf_manager' NOT NULL,
+	"status" "partner_status" DEFAULT 'active' NOT NULL,
+	"last_login_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "partners_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE "password_reset_tokens" (
@@ -275,7 +294,7 @@ CREATE TABLE "turfs" (
 	"rating" numeric(3, 2) DEFAULT '0.00',
 	"total_reviews" integer DEFAULT 0 NOT NULL,
 	"capacity" integer,
-	"agent_id" uuid,
+	"partner_id" uuid,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"images" jsonb DEFAULT '[]'::jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -344,7 +363,7 @@ ALTER TABLE "tournament_participants" ADD CONSTRAINT "tournament_participants_to
 ALTER TABLE "tournament_participants" ADD CONSTRAINT "tournament_participants_player_id_users_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tournament_teams" ADD CONSTRAINT "tournament_teams_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tournament_teams" ADD CONSTRAINT "tournament_teams_team_id_teams_id_fk" FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "turfs" ADD CONSTRAINT "turfs_agent_id_users_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "turfs" ADD CONSTRAINT "turfs_partner_id_partners_id_fk" FOREIGN KEY ("partner_id") REFERENCES "public"."partners"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "unique_pending_challenge" ON "challenges" USING btree ("challenger_team_id","challenged_team_id");--> statement-breakpoint
 CREATE INDEX "challenge_challenger_idx" ON "challenges" USING btree ("challenger_team_id");--> statement-breakpoint
 CREATE INDEX "challenge_challenged_idx" ON "challenges" USING btree ("challenged_team_id");--> statement-breakpoint
