@@ -1,5 +1,7 @@
 CREATE TYPE "public"."challenge_status" AS ENUM('PENDING', 'ACCEPTED', 'DECLINED', 'CANCELLED', 'EXPIRED');--> statement-breakpoint
 CREATE TYPE "public"."fixture_status" AS ENUM('UPCOMING', 'LIVE', 'COMPLETED', 'CANCELLED', 'POSTPONED');--> statement-breakpoint
+CREATE TYPE "public"."kyc_document_status" AS ENUM('pending', 'accepted', 'rejected');--> statement-breakpoint
+CREATE TYPE "public"."kyc_status" AS ENUM('not_submitted', 'pending', 'in_review', 'approved', 'rejected', 'expired');--> statement-breakpoint
 CREATE TYPE "public"."media_type" AS ENUM('image', 'video');--> statement-breakpoint
 CREATE TYPE "public"."notification_type" AS ENUM('MATCH_REMINDER', 'PAYMENT_CONFIRMED', 'TOURNAMENT_UPDATE', 'TEAM_INVITE', 'GENERAL');--> statement-breakpoint
 CREATE TYPE "public"."partner_role" AS ENUM('turf_manager');--> statement-breakpoint
@@ -25,6 +27,48 @@ CREATE TABLE "challenges" (
 	"responded_at" timestamp with time zone,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "kyc_documents" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"submission_id" uuid NOT NULL,
+	"partner_id" uuid NOT NULL,
+	"document_type_id" varchar(64) NOT NULL,
+	"document_label" varchar(128) NOT NULL,
+	"file_url" varchar(1024) NOT NULL,
+	"mime_type" varchar(64),
+	"size_bytes" integer,
+	"status" "kyc_document_status" DEFAULT 'pending' NOT NULL,
+	"rejection_note" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "kyc_settings" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"approval_mode" varchar(16) DEFAULT 'manual' NOT NULL,
+	"review_sla_hours" integer DEFAULT 48 NOT NULL,
+	"expiry_days" integer DEFAULT 365 NOT NULL,
+	"allow_resubmission" boolean DEFAULT true NOT NULL,
+	"max_resubmissions" integer DEFAULT 3 NOT NULL,
+	"notify_admin_on_submission" boolean DEFAULT true NOT NULL,
+	"admin_notification_email" varchar(128) DEFAULT 'kyc@mkrsports.com' NOT NULL,
+	"approval_email_template" text DEFAULT 'Congratulations! Your KYC documents have been verified and your partner account is now active.' NOT NULL,
+	"rejection_email_template" text DEFAULT 'We were unable to verify your submitted documents. Please review the feedback below and resubmit.' NOT NULL,
+	"required_documents" jsonb DEFAULT '[]'::jsonb,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "kyc_submissions" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"partner_id" uuid NOT NULL,
+	"attempt_number" integer DEFAULT 1 NOT NULL,
+	"status" "kyc_status" DEFAULT 'pending' NOT NULL,
+	"reviewed_by" uuid,
+	"reviewed_at" timestamp with time zone,
+	"rejection_reason" text,
+	"admin_notes" text,
+	"submitted_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -103,10 +147,37 @@ CREATE TABLE "partners" (
 	"business_name" varchar(128),
 	"role" "partner_role" DEFAULT 'turf_manager' NOT NULL,
 	"status" "partner_status" DEFAULT 'active' NOT NULL,
+	"kyc_status" "kyc_status" DEFAULT 'not_submitted' NOT NULL,
+	"kyc_submitted_at" timestamp with time zone,
+	"kyc_reviewed_at" timestamp with time zone,
+	"kyc_reviewed_by" uuid,
+	"kyc_rejection_reason" text,
+	"kyc_resubmission_count" integer DEFAULT 0 NOT NULL,
+	"commission_percent" numeric(5, 2),
 	"last_login_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "partners_email_unique" UNIQUE("email")
+);
+--> statement-breakpoint
+CREATE TABLE "partner_settings" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"session_timeout_minutes" integer DEFAULT 60 NOT NULL,
+	"max_failed_logins" integer DEFAULT 5 NOT NULL,
+	"auto_suspend_after_days" integer DEFAULT 90 NOT NULL,
+	"password_min_length" integer DEFAULT 8 NOT NULL,
+	"require_password_special_char" boolean DEFAULT true NOT NULL,
+	"require_password_number" boolean DEFAULT true NOT NULL,
+	"notify_on_booking_confirmed" boolean DEFAULT true NOT NULL,
+	"notify_on_payment_received" boolean DEFAULT true NOT NULL,
+	"notify_on_turf_review" boolean DEFAULT true NOT NULL,
+	"notify_on_account_suspended" boolean DEFAULT true NOT NULL,
+	"notify_on_kyc_approved" boolean DEFAULT true NOT NULL,
+	"notify_on_kyc_rejected" boolean DEFAULT true NOT NULL,
+	"support_email" varchar(128) DEFAULT 'partners@mkrsports.com' NOT NULL,
+	"default_currency" varchar(8) DEFAULT 'KES' NOT NULL,
+	"default_commission_percent" numeric(5, 2) DEFAULT '10.00' NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "password_reset_tokens" (
@@ -301,6 +372,22 @@ CREATE TABLE "turfs" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "turf_settings" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"min_booking_hours" numeric(4, 1) DEFAULT '1.0' NOT NULL,
+	"max_booking_hours" numeric(4, 1) DEFAULT '8.0' NOT NULL,
+	"advance_booking_days" integer DEFAULT 30 NOT NULL,
+	"cancellation_hours" integer DEFAULT 24 NOT NULL,
+	"auto_approve_listings" boolean DEFAULT false NOT NULL,
+	"require_capacity" boolean DEFAULT true NOT NULL,
+	"require_surface" boolean DEFAULT true NOT NULL,
+	"require_images" boolean DEFAULT true NOT NULL,
+	"min_images" integer DEFAULT 3 NOT NULL,
+	"surface_price_defaults" jsonb DEFAULT '{}'::jsonb,
+	"amenity_options" jsonb DEFAULT '[]'::jsonb,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(64) NOT NULL,
@@ -334,6 +421,9 @@ ALTER TABLE "challenges" ADD CONSTRAINT "challenges_challenger_team_id_teams_id_
 ALTER TABLE "challenges" ADD CONSTRAINT "challenges_challenged_team_id_teams_id_fk" FOREIGN KEY ("challenged_team_id") REFERENCES "public"."teams"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "challenges" ADD CONSTRAINT "challenges_proposed_turf_id_turfs_id_fk" FOREIGN KEY ("proposed_turf_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "challenges" ADD CONSTRAINT "challenges_match_id_matches_id_fk" FOREIGN KEY ("match_id") REFERENCES "public"."matches"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kyc_documents" ADD CONSTRAINT "kyc_documents_submission_id_kyc_submissions_id_fk" FOREIGN KEY ("submission_id") REFERENCES "public"."kyc_submissions"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kyc_documents" ADD CONSTRAINT "kyc_documents_partner_id_partners_id_fk" FOREIGN KEY ("partner_id") REFERENCES "public"."partners"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "kyc_submissions" ADD CONSTRAINT "kyc_submissions_partner_id_partners_id_fk" FOREIGN KEY ("partner_id") REFERENCES "public"."partners"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_turf_id_turfs_id_fk" FOREIGN KEY ("turf_id") REFERENCES "public"."turfs"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "matches" ADD CONSTRAINT "matches_home_team_id_teams_id_fk" FOREIGN KEY ("home_team_id") REFERENCES "public"."teams"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
@@ -342,6 +432,7 @@ ALTER TABLE "match_players" ADD CONSTRAINT "match_players_match_id_matches_id_fk
 ALTER TABLE "match_players" ADD CONSTRAINT "match_players_player_id_users_id_fk" FOREIGN KEY ("player_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "media" ADD CONSTRAINT "media_uploader_id_users_id_fk" FOREIGN KEY ("uploader_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "partners" ADD CONSTRAINT "partners_kyc_reviewed_by_system_users_id_fk" FOREIGN KEY ("kyc_reviewed_by") REFERENCES "public"."system_users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_match_id_matches_id_fk" FOREIGN KEY ("match_id") REFERENCES "public"."matches"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_tournament_id_tournaments_id_fk" FOREIGN KEY ("tournament_id") REFERENCES "public"."tournaments"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
@@ -368,6 +459,10 @@ CREATE UNIQUE INDEX "unique_pending_challenge" ON "challenges" USING btree ("cha
 CREATE INDEX "challenge_challenger_idx" ON "challenges" USING btree ("challenger_team_id");--> statement-breakpoint
 CREATE INDEX "challenge_challenged_idx" ON "challenges" USING btree ("challenged_team_id");--> statement-breakpoint
 CREATE INDEX "challenge_status_idx" ON "challenges" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "kyc_doc_submission_idx" ON "kyc_documents" USING btree ("submission_id");--> statement-breakpoint
+CREATE INDEX "kyc_doc_partner_idx" ON "kyc_documents" USING btree ("partner_id");--> statement-breakpoint
+CREATE INDEX "kyc_submission_partner_idx" ON "kyc_submissions" USING btree ("partner_id");--> statement-breakpoint
+CREATE INDEX "kyc_submission_status_idx" ON "kyc_submissions" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "match_tournament_idx" ON "matches" USING btree ("tournament_id");--> statement-breakpoint
 CREATE INDEX "match_date_idx" ON "matches" USING btree ("date");--> statement-breakpoint
 CREATE INDEX "match_status_idx" ON "matches" USING btree ("status");--> statement-breakpoint
